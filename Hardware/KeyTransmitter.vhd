@@ -8,7 +8,7 @@ entity KeyTransmitter is
 			TXclk: in std_logic;
 			RESET: in std_logic;
 			
-			--KBfree: out std_logic;
+			KBfree: out std_logic;
 			TXd: out std_logic);
 end KeyTransmitter;
 
@@ -62,5 +62,7 @@ UCOUNTER: Counter3 port map (
 			 CLK => TXclk,
 			 RESET => RESET,
 			 Q => counterOut);
+			 
+KBfree <= '1' when counterOut = "000" else '0';
 
 end arch_KT;

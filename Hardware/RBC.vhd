@@ -10,6 +10,8 @@ entity RBC is
 			
 			Wr: out std_logic;
 			selPG: out std_logic;
+			incPut: out std_logic;
+			incGet: out std_logic;
 			Wreg: out std_logic;
 			DAC: out std_logic);
 end RBC;
