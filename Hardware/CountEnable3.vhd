@@ -1,0 +1,20 @@
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity CountEnable3 is
+    port(
+	     A: in std_logic_vector(2 downto 0);
+		  B: in std_logic_vector(2 downto 0);
+		  S: in std_logic;
+		  
+		  Y: out std_logic_vector(2 downto 0)
+		  );
+		  
+end CountEnable3;
+
+architecture MuxLogic3 of CountEnable3 is
+begin
+    Y(0) <= (not S and A(0)) or (S and B(0));
+	 Y(1) <= (not S and A(1)) or (S and B(1));
+	 Y(2) <= (not S and A(2)) or (S and B(2));
+end MuxLogic3;
