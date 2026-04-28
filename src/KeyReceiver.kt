@@ -27,11 +27,6 @@ object KeyReceiver {
 }
 
 /**Teste**/
-/**Needs manipulation of TXd & key pressing on hardware for testing. Order:
- * TXd -> 0;
- * TXd -> 1;
- * Press key;
- * TXd -> 0;**/
 fun main() {
     KeyReceiver.init()
     Time.sleep(5000)
