@@ -13,7 +13,7 @@ object SerialEmitter {
     /**Envia tramas para os diferentes módulos SerialReceiver**/
     /**Identificando o periférico de destino em 'addr'**/
     /**os bits de dados em 'data'**/
-    /**e em 'size' o número de bits a enviar**/
+    /**e em 'size' o número de bits a enviar **/
     fun send(addr: Peripherial, data: Int) {
         val SS = if (addr == Peripherial.LCD) OUTPUTPORTS.SS_LCD.mask else OUTPUTPORTS.SS_TD.mask
         HAL.clrBits(SS)
