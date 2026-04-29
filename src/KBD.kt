@@ -8,7 +8,8 @@ object KBD {
     }
     /**Retorna de imediato a tecla premida ou NONE se não há tecla premida**/
     fun getKey(): Char {
-        val keyCode = HAL.readBits(0x0F)
+        val keyCode = KeyReceiver.serialReceiver()
+        val keyCode2 = HAL.readBits(0x0F)
         val keyConvert =
             when (keyCode) {
                 0 -> '1'
@@ -28,7 +29,6 @@ object KBD {
                 14 -> 'C'
                 15 -> 'D'
                 else -> none
-
             }
         return keyConvert
     }

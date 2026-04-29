@@ -6,15 +6,6 @@ object TUI {
         KBD.init()
     }
     fun writeKeyOnLCD() {
-        LCD.clear()
-        while (true) {
-            if (HAL.isBit(0b00010000)) {
-                val key = KBD.waitKey(10)
-                Thread.sleep(1)
-                if (key != KBD.none) {
-                    LCD.write(key)
-                }
-            }
-        }
+        LCD.write(KBD.waitKey(1000))
     }
 }

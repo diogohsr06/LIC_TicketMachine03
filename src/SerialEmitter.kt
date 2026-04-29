@@ -8,7 +8,7 @@ object SerialEmitter {
         HAL.init() //port a 0
         HAL.setBits(OUTPUTPORTS.SS_LCD.mask)
         HAL.setBits(OUTPUTPORTS.SS_TD.mask)
-        HAL.clrBits(0b00000010)
+        HAL.clrBits(OUTPUTPORTS.SCLK.mask)
     }
     /**Envia tramas para os diferentes módulos SerialReceiver**/
     /**Identificando o periférico de destino em 'addr'**/
