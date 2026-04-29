@@ -22,10 +22,9 @@ component KeyboardReader is
 			--Tdelay: in std_logic_vector(1 downto 0);
 			RESET: in std_logic;
 			Osc: in std_logic;
-			Kack: in std_logic;
-			Cols: out std_logic_vector(3 downto 0);
-			K: out std_logic_vector(3 downto 0);
-			Kval: out std_logic);
+			TXclk: in std_logic;
+			TXd: out std_logic;
+			Cols: out std_logic_vector(3 downto 0));
 end component;
 
 component UsbPort IS 
@@ -65,22 +64,13 @@ component PETD is
 			D: out std_logic_vector(8 downto 0));
 end component;
 
-signal CLK_out: std_logic;
-
-signal Kack_out: std_logic; 
-signal Kval_out: std_logic;
-signal K_out: std_logic_vector(3 downto 0);
-
-signal O1: std_logic;
-signal O2: std_logic;
-signal O0: std_logic;
-signal O3: std_logic;
-
-signal D9_out: std_logic;
-signal D_out: std_logic_vector(8 downto 0);
-
+--signal CLK_out: std_logic;
+signal I0, I1, I2, I3, I4, I5, I6, I7: std_logic;
+signal O0, O1, O2, O3, O4, O5, O6, O7: std_logic;
 signal Done: std_logic;
 signal Output_usb: std_logic_vector(7 downto 0);
+signal D9_out: std_logic;
+signal D_out: std_logic_vector(8 downto 0);
 
 begin
 
@@ -88,10 +78,9 @@ KR: KeyboardReader port map(
 	 Rows => Rows,
 	 RESET => RESET,
 	 Osc => Osc,
-	 Kack => O0,
-	 Cols => Cols,
-	 K => K_out,
-	 Kval => Kval_out);
+	 TXclk => O7,
+	 TXd => I7,
+	 Cols => Cols);
 	 
 SRLCD: PELCD port map(
 	 SDX => O0,
@@ -130,20 +119,24 @@ TD: TICKET_DISPENSER port map(
 	 HEX5 => HEX5);
 	 
 UUSBPORT: UsbPort port map(
-			 inputPort(0) => K_out(0),
-			 inputPort(1) => K_out(1),
-			 inputPort(2) => K_out(2),
-			 inputPort(3) => K_out(3),
-			 inputPort(4) => Kval_out,
-			 inputPort(5) => Done, --Sem certeza/Temporario
+			 inputPort(0) => '0',
+			 inputPort(1) => '0',
+			 inputPort(2) => '0',
+			 inputPort(3) => '0',
+			 inputPort(4) => Done,
+			 inputPort(5) => '0',
 			 inputPort(6) => '0',
-			 inputPort(7) => '0',
+			 inputPort(7) => I7,
 			 outputPort => Output_usb);
 			 
 O0 <= Output_usb(0);
 O1 <= Output_usb(1);
 O2 <= Output_usb(2);
 O3 <= Output_usb(3);
+O4 <= Output_usb(4);
+O5 <= Output_usb(5);
+O6 <= Output_usb(6);
+O7 <= Output_usb(7);
 
 end arch_TM;
 	 
