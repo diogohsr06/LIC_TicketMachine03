@@ -15,7 +15,7 @@ M ❌
 Software:
 HAL ✅
 KBD ✅ ❗ (KeyReceiver)
-KeyReceiver ✅ ❗
+KeyReceiver ✅ 
 Serial Emitter ✅
 LCD ✅
 Ticket Dispenser ✅ 
@@ -25,5 +25,5 @@ File Access ❌
 Stations ❌
 Coin Deposit ❌
 Others ❌
-TUI 🟨
+TUI 🟨 (needs KBD 2nd phase compatibility)
 TicketMachine 🟨
