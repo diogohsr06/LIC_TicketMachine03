@@ -32,8 +32,6 @@ object KBD {
                 15 -> 'D'
                 else -> none
             }
-        Time.sleep(1000)
-        println(keyConvert)
         return keyConvert
     }
     /**Retorna a tecla premida, caso ocorra antes de 'timeout' (em milissegundos), ou NONE caso contrário**/
@@ -52,6 +50,6 @@ object KBD {
 fun main() {
     KBD.init()
     while(true) {
-        KBD.waitKey(10000)
+        println(KBD.waitKey(10000))
     }
 }

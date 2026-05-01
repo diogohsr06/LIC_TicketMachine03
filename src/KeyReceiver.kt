@@ -18,15 +18,17 @@ object KeyReceiver {
         HAL.setBits(OUTPUTPORTS.TXclk.mask)
         val STOP = HAL.isBit(INPUTPORTS.TXD.mask)
         HAL.clrBits(OUTPUTPORTS.TXclk.mask)
-        return if (STOP) data else -1
+        return if (STOP) data shr 1 and 0xF else -1
     }
 }
 /**Teste**/
 fun main() {
     KeyReceiver.init()
-    Time.sleep(2000)
-    println("Pressione uma tecla")
-    Time.sleep(5000)
-    val keyCode = KeyReceiver.serialReceiver()
-    println("Código recebido: $keyCode")
+    while (true) {
+        Time.sleep(2000)
+        println("Pressione uma tecla")
+        Time.sleep(5000)
+        val keyCode = KeyReceiver.serialReceiver()
+        println("Código recebido: $keyCode")
+    }
 }
