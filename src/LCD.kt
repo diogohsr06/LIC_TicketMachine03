@@ -11,9 +11,7 @@ object LCD {
         val frame1 = rsBit or (data shl 1) or (1 shl 9)
         val frame2 = rsBit or (data shl 1)
         SerialEmitter.send(SerialEmitter.Peripherial.LCD, frame1)
-        Time.sleep(1)
         SerialEmitter.send(SerialEmitter.Peripherial.LCD, frame2)
-        Time.sleep(1)
     }
     /**Escreve um Byte de comando/dados no LCD**/
     private fun writeByte(rs: Boolean, data: Int) {

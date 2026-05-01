@@ -5,14 +5,23 @@ import java.text.SimpleDateFormat
 /**Text User Interface**/
 object TUI {
     val date = SimpleDateFormat("dd/MM/yyyy hh:mm").format(Date())
+    private fun center(text: String): Int {
+        val getCol = (LCD.COLS - text.length) / 2
+        return if (getCol < 0) 0 else getCol
+    }
+
     fun init() {
         LCD.init()
         KBD.init()
     }
     fun startMenu() {
-        LCD.write(" Ticket To Ride")
-        LCD.cursor(1,0)
-        LCD.write("$date")
+        LCD.clear()
+        val title = "Ticket To Ride"
+        LCD.cursor(0, center(title))
+        LCD.write(title)
+        val dateStr = date.format(Date())
+        LCD.cursor(1, center(dateStr))
+        LCD.write(dateStr)
     }
     fun writeKeyOnLCD() {
         LCD.write(KBD.waitKey(1000))
