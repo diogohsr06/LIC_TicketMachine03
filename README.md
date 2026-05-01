@@ -25,5 +25,5 @@ File Access ❌
 Stations ❌
 Coin Deposit ❌
 Others ❌
-TUI 🟨 (needs KBD 2nd phase compatibility)
+TUI 🟨 
 TicketMachine 🟨
