@@ -1,34 +1,32 @@
 import isel.leic.utils.Time
 
-/**Key Receiver**/
 object KeyReceiver {
     fun init() {
         HAL.init()
         HAL.clrBits(OUTPUTPORTS.TXclk.mask)
     }
     fun serialReceiver(): Int {
-        val TXD = if (HAL.isBit(INPUTPORTS.TXD.mask)) 1 else 0
         if (HAL.isBit(INPUTPORTS.TXD.mask)) return -1
-        var frame = 0
-        for (i in 0..6) {
+        var data = 0
+        for (i in 0 until 6) {
             HAL.setBits(OUTPUTPORTS.TXclk.mask)
+            if (HAL.isBit(INPUTPORTS.TXD.mask)) {
+                data = data or (1 shl i)
+            }
             HAL.clrBits(OUTPUTPORTS.TXclk.mask)
-            frame = frame or (TXD shl i)
         }
         HAL.setBits(OUTPUTPORTS.TXclk.mask)
+        val STOP = HAL.isBit(INPUTPORTS.TXD.mask)
         HAL.clrBits(OUTPUTPORTS.TXclk.mask)
-        val START = frame and 0b100000
-        val STOP = frame and 0b000001
-        val D = frame and 0b011110
-        if (START == 0) return -1
-        else if (STOP == 1) return -1
-        else return (D shr 1) and 0b1111
+        return if (STOP) data else -1
     }
 }
-
 /**Teste**/
 fun main() {
     KeyReceiver.init()
+    Time.sleep(2000)
+    println("Pressione uma tecla")
     Time.sleep(5000)
-    println(KeyReceiver.serialReceiver())
+    val keyCode = KeyReceiver.serialReceiver()
+    println("Código recebido: $keyCode")
 }

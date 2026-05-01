@@ -1,3 +1,5 @@
+import isel.leic.utils.Time
+
 /**Keyboard**/
 object KBD {
     const val NONE = 0;
@@ -30,6 +32,8 @@ object KBD {
                 15 -> 'D'
                 else -> none
             }
+        Time.sleep(1000)
+        println(keyConvert)
         return keyConvert
     }
     /**Retorna a tecla premida, caso ocorra antes de 'timeout' (em milissegundos), ou NONE caso contrário**/
@@ -46,12 +50,8 @@ object KBD {
 }
 /**Teste**/
 fun main() {
+    KBD.init()
     while(true) {
-        if(HAL.isBit(0b00010000)){
-            KBD.waitKey(10)
-            Thread.sleep(1)
-            HAL.writeBits(0xFF,0b00000001)
-        }
-        else HAL.clrBits(0xFF)
+        KBD.waitKey(10000)
     }
 }
