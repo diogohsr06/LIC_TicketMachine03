@@ -5,7 +5,7 @@
 
 Hardware:
 Key Decode ✅
-Ring Buffer ✅ ❗
+Ring Buffer ✅ ❗ 
 Key Transmitter ✅ ❗
 Port Expander LCD ✅
 Port Expander TD ✅
@@ -14,11 +14,11 @@ M ❌
 
 Software:
 HAL ✅
-KBD ✅
+KBD ✅ ❗ (KeyReceiver)
 KeyReceiver ✅ ❗
 Serial Emitter ✅
 LCD ✅
-Ticket Dispenser ✅ ❗
+Ticket Dispenser ✅ 
 Coin acceptor ❌
 M ❌
 File Access ❌
