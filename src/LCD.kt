@@ -25,6 +25,14 @@ object LCD {
     private fun writeDATA(data: Int) {
         writeByte(true, data)
     }
+    private fun createChar(location: Int, pattern: IntArray) {
+        val address = (location and 0x07) shl 3
+        writeCMD(0x40 or address)
+        for (i in 0..7) {
+            writeDATA(pattern[i])
+        }
+        writeCMD(0x80)
+    }
     /**Envia a sequência de iniciação para comunicação a 8 bits**/
     fun init() {
         writeCMD(0b0011_0000)
@@ -37,6 +45,9 @@ object LCD {
         writeCMD(0b0000_0001)
         writeCMD(0b0000_0110)
         writeCMD(0b0000_1111)
+        LCD.createChar(0, euro)
+        LCD.createChar(1, upArrow)
+        LCD.createChar(2, downArrow)
     }
     /**Escreve um carater na posição corrente**/
     fun write(c: Char) {
@@ -66,7 +77,7 @@ fun main() {
         LCD.cursor(0, 0)
         LCD.write("Texto")
         LCD.cursor(1,0)
-        LCD.write('G')
+        LCD.write(0.toChar())
         Time.sleep(5000)
     }
 }
