@@ -14,7 +14,7 @@ M ❌
 
 Software:
 HAL ✅
-KBD ✅ ❗ (KeyReceiver)
+KBD ✅ 
 KeyReceiver ✅ 
 Serial Emitter ✅
 LCD ✅
