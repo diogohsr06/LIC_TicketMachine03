@@ -26,9 +26,9 @@ fun main() {
     KeyReceiver.init()
     while (true) {
         Time.sleep(2000)
-        println("Pressione uma tecla")
+        println("Press a key")
         Time.sleep(5000)
         val keyCode = KeyReceiver.serialReceiver()
-        println("Código recebido: $keyCode")
+        println("Code: $keyCode")
     }
 }

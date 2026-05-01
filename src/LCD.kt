@@ -78,6 +78,10 @@ fun main() {
         LCD.write("Texto")
         LCD.cursor(1,0)
         LCD.write(0.toChar())
+        LCD.cursor(1,1)
+        LCD.write(1.toChar())
+        LCD.cursor(1,2)
+        LCD.write(2.toChar())
         Time.sleep(5000)
     }
 }

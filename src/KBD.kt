@@ -3,7 +3,7 @@ import isel.leic.utils.Time
 /**Keyboard**/
 object KBD {
     const val NONE = 0;
-    val none = NONE.digitToChar()
+    val none = NONE.toChar()
     /**Inicia a classe**/
     fun init() {
         KeyReceiver.init()
@@ -49,6 +49,6 @@ object KBD {
 fun main() {
     KBD.init()
     while(true) {
-        println(KBD.waitKey(10000))
+        println("Key: ${KBD.waitKey(10000)}")
     }
 }
