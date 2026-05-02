@@ -22,7 +22,7 @@ Ticket Dispenser ✅
 Coin acceptor ❌
 M ❌
 File Access ✅
-Stations 🟨
+Stations ✅
 Coin Deposit 🟨
 Others ❌
 TUI ✅ 
