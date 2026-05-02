@@ -56,7 +56,7 @@ object LCD {
     /**Escreve uma string na posição corrente**/
     fun write(text: String) {
         for (texto in text)
-            write(texto)
+            writeDATA(texto.code)
     }
     /**Envia comando para posicionar cursor('line':0..LINES-1, 'column':0..COLS-1)**/
     fun cursor(line: Int, column: Int) {

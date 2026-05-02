@@ -23,7 +23,6 @@ object SerialEmitter {
             if (SDX == 1) {
                 HAL.setBits(OUTPUTPORTS.SDX.mask)
             } else HAL.clrBits(OUTPUTPORTS.SDX.mask)
-            Time.sleep(5)
             HAL.setBits(OUTPUTPORTS.SCLK.mask)
         }
         HAL.setBits(SS)
