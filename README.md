@@ -21,7 +21,7 @@ LCD ✅
 Ticket Dispenser ✅ 
 Coin acceptor ❌
 M ❌
-File Access ❌
+File Access 🟨
 Stations ❌
 Coin Deposit ❌
 Others ❌
