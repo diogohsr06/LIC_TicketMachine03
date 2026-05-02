@@ -1,9 +1,6 @@
-import java.io.File
-import java.io.BufferedWriter
 import java.io.BufferedReader
 import java.io.FileReader
 import java.io.PrintWriter
-import java.io.FileWriter
 
 /**File writer & File reader**/
 object FileAccess {
@@ -13,6 +10,9 @@ object FileAccess {
 
     private fun createReader(fileName: String): BufferedReader {
         return BufferedReader(FileReader(fileName))
+    }
+    private fun createWriter(fileName: String?): PrintWriter {
+        return PrintWriter(fileName)
     }
     fun toStations(line: String): Stations {
         val parts = line.split(";")
@@ -49,10 +49,40 @@ object FileAccess {
         }
         return coins.toTypedArray()
     }
+    fun writeStations(fileName: String, stations: Array<Stations>) {
+        val writeFile = createWriter(fileName)
+        for (i in stations) {
+            writeFile.println("${i.price};${i.sold};${i.station}")
+        }
+        writeFile.close()
+    }
+    fun writeCoins(fileName: String, coins: Array<Coins>) {
+        val writeFile = createWriter(fileName)
+        for (i in coins) {
+            writeFile.println("${i.value};${i.amount}")
+        }
+        writeFile.close()
+    }
 }
 
 /**Teste (Debug)**/
 fun main() {
+    val a = arrayOf(
+        FileAccess.Stations(150, 10, "Rossio"),
+        FileAccess.Stations(220, 5, "Oriente"),
+        FileAccess.Stations(150, 2, "Santa Apolonia"),
+        FileAccess.Stations(350, 0, "Sintra")
+    )
+    val b = arrayOf(
+        FileAccess.Coins(5, 50),
+        FileAccess.Coins(10, 20),
+        FileAccess.Coins(20, 30),
+        FileAccess.Coins(50, 10),
+        FileAccess.Coins(100, 15),
+        FileAccess.Coins(200, 5)
+    )
     FileAccess.readStations("stations.txt")
     FileAccess.readCoins("CoinDeposit.txt")
+    FileAccess.writeStations("testStations.txt", a)
+    FileAccess.writeCoins("testCoins.txt", b)
 }
