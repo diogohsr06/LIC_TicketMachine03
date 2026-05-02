@@ -94,12 +94,12 @@ fun main() {
 
     TUI.write("Test1: Press Key", 0, 0, true, true)
     TUI.write("Only one: ", 1, 0, false, false)
-    Time.sleep(1000)
+    Time.sleep(2000)
     TUI.writeKeyOnLCD()
     Time.sleep(5000)
 
     TUI.write("Test2: Yes/No", 0, 0, true, true)
-    Time.sleep(1000)
+    Time.sleep(2000)
     val text = "Fumar faz bem?"
     LCD.clear()
     val yN = TUI.yesOrNo(text,5000)
@@ -111,7 +111,7 @@ fun main() {
     Time.sleep(5000)
 
     TUI.write("Test3: Printing Tickets Interfaces", 0, 0, true, true)
-    Time.sleep(1000)
+    Time.sleep(2000)
     TUI.printTicket("Lisboa", 1, 2.25)
     Time.sleep(2000)
     TUI.printTicket("Maldivas", 13, 4.55)
@@ -131,4 +131,6 @@ fun main() {
     TUI.printCoins(2.55, 4, 8)
     Time.sleep(2000)
     TUI.stationCount("Wakanda", 2)
+    Time.sleep(2000)
+    TUI.write("Interfaces have been tested!", 0, 0, true, true)
 }

@@ -75,7 +75,7 @@ fun main() {
     while(true) {
         LCD.clear()
         LCD.cursor(0, 0)
-        LCD.write("Texto")
+        LCD.write("String")
         LCD.cursor(1,0)
         LCD.write(0.toChar())
         LCD.cursor(1,1)

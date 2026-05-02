@@ -5,13 +5,13 @@ import java.io.PrintWriter
 /**File writer & File reader**/
 object FileAccess {
 
-    data class Stations(val price: Int, val sold: Int, val station: String)
+    data class Stations(val price: Int, var sold: Int, val station: String)
     data class Coins(val value: Int, val amount: Int)
 
     private fun createReader(fileName: String): BufferedReader {
         return BufferedReader(FileReader(fileName))
     }
-    private fun createWriter(fileName: String?): PrintWriter {
+    private fun createWriter(fileName: String): PrintWriter {
         return PrintWriter(fileName)
     }
     fun toStations(line: String): Stations {
