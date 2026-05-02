@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 
 /**Text User Interface**/
 object TUI {
-    val date = SimpleDateFormat("dd/MM/yyyy hh:mm").format(Date())
+    val date = SimpleDateFormat("dd/MM/yyyy HH:mm").format(Date())
     private fun center(text: String): Int {
         val getCol = (LCD.COLS - text.length) / 2
         return if (getCol < 0) 0 else getCol
