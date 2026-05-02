@@ -21,9 +21,9 @@ LCD ✅
 Ticket Dispenser ✅ 
 Coin acceptor ❌
 M ❌
-File Access 🟨
-Stations ❌
-Coin Deposit ❌
+File Access ✅
+Stations 🟨
+Coin Deposit 🟨
 Others ❌
 TUI ✅ 
 TicketMachine 🟨
