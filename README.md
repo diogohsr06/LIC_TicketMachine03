@@ -22,8 +22,8 @@ Ticket Dispenser ✅
 Coin acceptor ❌
 M ❌
 File Access ✅
-Stations ❌
-Coin Deposit ❌
+Stations 🟨
+Coin Deposit 🟨
 Others ❌
 TUI ✅ 
 TicketMachine 🟨
