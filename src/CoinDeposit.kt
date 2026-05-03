@@ -1,6 +1,9 @@
+import isel.leic.utils.Time
+
 /**Coin Deposit**/
 object CoinDeposit {
+    var coins = arrayOf<FileAccess.Coins>()
     fun init() {
-        val coins = FileAccess.readCoins("CoinDeposit.txt")
+        coins = FileAccess.readCoins("CoinDeposit.txt")
     }
 }
