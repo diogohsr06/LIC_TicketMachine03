@@ -20,11 +20,11 @@ Serial Emitter ✅
 LCD ✅
 Ticket Dispenser ✅ 
 Coin acceptor ❌
-M ❌
+M ✅
 File Access ✅
 Stations ✅
 Coin Deposit 🟨
-Others ❌
+Others 🟨
 TUI ✅ 
 TicketMachine 🟨
 
