@@ -24,7 +24,7 @@ M ✅
 File Access ✅
 Stations ✅
 Coin Deposit 🟨
-Others ❌
+Others 🟨
 TUI ✅ 
 TicketMachine 🟨
 
