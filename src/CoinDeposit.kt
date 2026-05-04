@@ -71,6 +71,7 @@ fun main() {
     println("Exchange: ")
     val exchange = readln().toInt()
     println("Wait...")
+    CoinDeposit.exchange(exchange)
     Time.sleep(5000)
     println("Done!")
     println("Deposit: ${CoinDeposit.getTotal()}")
