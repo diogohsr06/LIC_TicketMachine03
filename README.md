@@ -23,7 +23,7 @@ Coin acceptor ❌
 M ✅
 File Access ✅
 Stations ✅
-Coin Deposit 🟨
+Coin Deposit ✅ 
 Others 🟨
 TUI ✅ 
 TicketMachine 🟨
