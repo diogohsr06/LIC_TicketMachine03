@@ -6,7 +6,7 @@ import java.io.PrintWriter
 object FileAccess {
 
     data class Stations(val price: Int, var sold: Int, val station: String)
-    data class Coins(val value: Int, val amount: Int)
+    data class Coins(val value: Int, var amount: Int)
 
     private fun createReader(fileName: String): BufferedReader {
         return BufferedReader(FileReader(fileName))
