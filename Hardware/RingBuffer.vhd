@@ -17,6 +17,8 @@ end RingBuffer;
 architecture arch_RB of RingBuffer is
 component RBC is
     port(
+			CLK: in std_logic;
+			RESET: in std_logic;
 			DAV: in std_logic;
 			CTS: in std_logic;
 			full: in std_logic;
@@ -50,7 +52,6 @@ component RBRAM is
 		DATA_WIDTH : natural := 4
 	);
    port(
-			CLK: in std_logic;
 			A: in std_logic_vector(ADDRESS_WIDTH - 1 downto 0);
 			Din: in std_logic_vector(DATA_WIDTH - 1 downto 0);
 			wr: in std_logic;
@@ -69,6 +70,8 @@ signal RAM_ADDR: std_logic_vector(3 downto 0);
 begin
 
 RINGBUFFERCONTROL: RBC port map (
+						 CLK => CLK,
+						 RESET => RESET,
 						 DAV => DAV,
 						 CTS => CTS,
 						 full => full_out,
@@ -91,7 +94,6 @@ MEMORYCONTROLADDRESS: MAC port map (
 							 empty => empty_out);
 							 
 RINGBUFFERRAM: RBRAM port map (
-	  CLK => CLK,
 	  A => RAM_ADDR,
 	  Din => D,
 	  wr => WR_RAM,

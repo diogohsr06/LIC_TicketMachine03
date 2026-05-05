@@ -49,10 +49,10 @@ UREG: Reg port map (
 		
 UMUX: MUX6 port map (
 		X(0) => '1',
-		X(1) => D(0),
-		X(2) => D(1),
-		X(3) => D(2),
-		X(4) => D(3),
+		X(1) => Q_out(0),
+		X(2) => Q_out(1),
+		X(3) => Q_out(2),
+		X(4) => Q_out(3),
 		X(5) => '0',
 		S => counterOut,
 		R => TXd);

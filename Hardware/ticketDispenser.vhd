@@ -31,7 +31,7 @@ begin
 	Fn <= CollectTicket;
 	
 	-- Convert RT bit to BDC
-	RTtoBDC <= "0000" when RT = '1' else "0001";
+	RTtoBDC <= "0000" when RT = '0' else "0001";
 	
 	-- Using the six 7 segment displays available on the MAX10 Lite Board
 	-- produce a valid array of numbers and letters which the client can understand
@@ -39,7 +39,7 @@ begin
 	-- Means: "bilhete de ida e volta, da estação de origem com o código (0001) para a estação de destino com o código (0100)
 	-- Implementation on the six 7 displays segment, facing the board, starting from the right to the left:	
 	U0: DECODERHEX port map (
-		A => D,
+		A => O,
 		ewr => "11111111",
 		clear => not Prt,
 		HEX0 => HEX4 );
@@ -52,7 +52,7 @@ begin
 		HEX0 => HEX5 );
 
 	U2: DECODERHEX port map (
-		A => O,
+		A => D,
 		ewr => "11111111",
 		clear => not Prt,
 		HEX0 => HEX2 );
