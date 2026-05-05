@@ -80,4 +80,10 @@ fun main() {
     CoinDeposit.saveCoins()
     Time.sleep(5000)
     println("Done! Go Check File.")
+    Time.sleep(5000)
+    println("Reseting counts...")
+    CoinDeposit.resetCnt()
+    CoinDeposit.saveCoins()
+    Time.sleep(5000)
+    println("Done! Go check file.")
 }
