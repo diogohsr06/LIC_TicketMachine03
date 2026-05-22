@@ -9,8 +9,8 @@ Ring Buffer ✅ ❗
 Key Transmitter ✅ ❗
 Port Expander LCD ✅
 Port Expander TD ✅
-Coin Acceptor ❌
-M ❌
+Coin Acceptor ✅
+M ✅
 
 Software:
 HAL ✅
