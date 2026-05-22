@@ -4,6 +4,9 @@ use IEEE.std_logic_1164.all;
 entity TicketMachine is
     port
         (
+			M: in std_logic;
+			CoinId: in std_logic_vector(2 downto 0);
+			Coin: in std_logic;
 			Rows: in std_logic_vector(3 downto 0);
 			RESET: in std_logic;
 			Osc: in std_logic;
@@ -73,6 +76,11 @@ signal D9_out: std_logic;
 signal D_out: std_logic_vector(8 downto 0);
 
 begin
+I6 <= M;
+I3 <= Coin;
+I2 <= CoinId(2);
+I1 <= CoinId(1);
+I0 <= CoinId(0);
 
 KR: KeyboardReader port map(
 	 Rows => Rows,
@@ -119,13 +127,13 @@ TD: TICKET_DISPENSER port map(
 	 HEX5 => HEX5);
 	 
 UUSBPORT: UsbPort port map(
-			 inputPort(0) => '0',
-			 inputPort(1) => '0',
-			 inputPort(2) => '0',
-			 inputPort(3) => '0',
+			 inputPort(0) => I0,
+			 inputPort(1) => I1,
+			 inputPort(2) => I2,
+			 inputPort(3) => I3,
 			 inputPort(4) => Done,
 			 inputPort(5) => '0',
-			 inputPort(6) => '0',
+			 inputPort(6) => I6,
 			 inputPort(7) => I7,
 			 outputPort => Output_usb);
 			 
