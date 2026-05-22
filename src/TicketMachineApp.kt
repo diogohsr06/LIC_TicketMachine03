@@ -1,9 +1,17 @@
+import TicketMachineApp.program
+import isel.leic.utils.Time
+
 /**On going**/
 object TicketMachineApp {
+    private const val ORIGIN_STATION = 0
+    private const val WAIT_KEY_MS = 200L
+
     private fun maintenanceMode() {
-        TODO()
+        fun showMInterfaces() {
+
+        }
     }
-    private fun program() {
+    private fun normalMode() {
         TODO()
     }
     fun init() {
@@ -14,8 +22,16 @@ object TicketMachineApp {
         CoinDeposit.init()
         Stations.init()
     }
+    fun program() {
+        while (true) {
+            TUI.startMenu()
+            Time.sleep(1000)
+            if (M.enabled()) maintenanceMode() else normalMode()
+        }
+    }
 }
 
 fun main() {
     TicketMachineApp.init()
+    program()
 }

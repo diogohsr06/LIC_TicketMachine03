@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 
 /**Text User Interface**/
 object TUI {
-    val date = SimpleDateFormat("dd/MM/yyyy HH:mm").format(Date())
+    private val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm")
     private fun center(text: String): Int {
         val getCol = (LCD.COLS - text.length) / 2
         return if (getCol < 0) 0 else getCol
@@ -34,8 +34,12 @@ object TUI {
     fun startMenu() {
         LCD.clear()
         write("Ticket to Ride", 0, 0, true, true)
-        val dateStr = date.format(Date())
+        val dateStr = dateFormatter.format(Date())
         write(dateStr, 1, 0, true, false)
+    }
+    fun maintenanceScreen(key: Char, task: String) {
+        write("Maintenance", 0, 0, true, true)
+        write("$key-$task", 0, 0, true, false)
     }
     fun writeKeyOnLCD() {
         LCD.write(KBD.waitKey(10000))
