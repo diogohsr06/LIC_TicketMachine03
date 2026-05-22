@@ -37,9 +37,9 @@ object TUI {
         val dateStr = dateFormatter.format(Date())
         write(dateStr, 1, 0, true, false)
     }
-    fun maintenanceScreen(key: Char, task: String) {
+    fun maintenanceScreen(option: String) {
         write("Maintenance", 0, 0, true, true)
-        write("$key-$task", 0, 0, true, false)
+        write(option, 1, 0, true, false)
     }
     fun writeKeyOnLCD() {
         LCD.write(KBD.waitKey(10000))

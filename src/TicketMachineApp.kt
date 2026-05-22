@@ -7,12 +7,20 @@ object TicketMachineApp {
     private const val WAIT_KEY_MS = 200L
 
     private fun maintenanceMode() {
+        val options = listOf<String>("#-Print Ticket", "A-Station Cnt.", "B-Coins Cnt.", "C-Reset Cnt.", "D-Shutdown")
         fun showMInterfaces() {
-
+            var i = 0
+            while (i < options.size) {
+                TUI.maintenanceScreen(options[i])
+                Time.sleep(2000)
+                i++
+                if (i == options.size) i = 0
+            }
         }
+        showMInterfaces()
     }
     private fun normalMode() {
-        TODO()
+        TUI.write("Yet to implement", 0, 0, true, true)
     }
     fun init() {
         M.init()
