@@ -8,14 +8,14 @@ entity MUX6 is
 		   R: out std_logic);
 end MUX6;
 
-architecture MuxLogic6 of MUX6 is
+architecture arch_mux6 of MUX6 is
 begin
-
-R <= ((X(0) and not S(0) and not S(1) and not S(2)) or 
-	  (X(1) and not S(0) and not S(1) and S(2)) or 
-	  (X(2) and not S(0) and S(1) and not S(0)) or 
-	  (X(3) and not S(0) and S(1) and S(2)) or
-	  (X(4) and S(0) and not S(1) and not S(0)) or
-	  (X(5) and S(0) and not S(1) and S(0)));
-   
-end MuxLogic6;
+    with S select
+        R <= X(0) when "000",
+             X(1) when "001",
+             X(2) when "010",
+             X(3) when "011",
+             X(4) when "100",
+             X(5) when "101",
+             '0'  when others;
+end arch_mux6;
