@@ -48,8 +48,9 @@ FF0: FlipFlop port map (
 	  EN => '1',
 	  Q => Q0);
 
-D1 <= (not (Q1) AND NOT (Q0) AND (not (DAV) and not (empty) and CTS)) or (not (Q1) and Q0) or (Q1 and not (Q0));
-D0 <= (not (Q1) AND NOT (Q0) AND (not (DAV) and not (empty) and CTS)) or (not (Q1) and not (Q0) and (DAV and not(full))) or (Q1 and not (Q0) and not (DAV));
+D1 <= (not Q1 and not Q0 and (not DAV and not empty and CTS)) or (not Q1 and Q0) or (Q1 and not Q0 and DAV);
+
+D0 <= (not Q1 and not Q0 and (not DAV and not empty and CTS)) or (not Q1 and not Q0 and (DAV and not full));
 
 selPG <= (not (Q1) and Q0);
 wr <= (not (Q1) and Q0);
