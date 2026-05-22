@@ -53,7 +53,7 @@ fun main() {
         Time.sleep(1000)
     }
     println("ID: ${CoinAcceptor.getCoinId()}")
-    println("Coin value: ${CoinAcceptor.coinValue()}")
+    println("Coin value: ${Others.centsToEuros(CoinAcceptor.coinValue()!!)}")
     Time.sleep(2000)
     println("Accepting coin")
     CoinAcceptor.coinAccept()
