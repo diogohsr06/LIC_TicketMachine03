@@ -19,7 +19,7 @@ KeyReceiver ✅
 Serial Emitter ✅
 LCD ✅
 Ticket Dispenser ✅ 
-Coin acceptor ❌
+Coin acceptor ✅
 M ✅
 File Access ✅
 Stations ✅
