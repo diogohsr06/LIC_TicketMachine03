@@ -2,7 +2,7 @@ import TUI.vendingAborted
 import isel.leic.utils.Time
 import kotlin.system.exitProcess
 
-/**On going**/
+/**Ticket Machine APP**/
 object TicketMachineApp {
     private const val ORIGIN_STATION = 0
     private const val WAIT_KEY_MS = 2000L
