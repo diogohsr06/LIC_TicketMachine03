@@ -74,6 +74,12 @@ object TUI {
         write("${"%02d".format(keyCode)}${1.toChar()}${2.toChar()}       ${"%.2f".format(price)}${0.toChar()}"
             , 1, 0, true, false)
     }
+    fun printTicket2(station: String, rt: Boolean, price: Double) {
+        val price2 = price * if (rt) 2 else 1
+        write(station, 0, 0, true, true)
+        if (rt) write("${1.toChar()}${2.toChar()}         ${"%.2f".format(price2)}${0.toChar()}", 1, 0, false, false)
+        if (!rt) write("${1.toChar()}          ${"%.2f".format(price2)}${0.toChar()}", 1, 0, false, false)
+    }
     fun processing(station: String) {
         write(station, 0, 0, true, true)
         write("Processing ...", 1, 0, true, false)
@@ -136,5 +142,7 @@ fun main() {
     Time.sleep(2000)
     TUI.stationCount("Wakanda", 7, 2)
     Time.sleep(2000)
+    TUI.printTicket2("Caraibas", true, 2.25)
+    Time.sleep(4000)
     TUI.write("Interfaces have been tested!", 0, 0, true, true)
 }

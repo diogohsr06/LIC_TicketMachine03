@@ -1,3 +1,4 @@
+import TUI.vendingAborted
 import isel.leic.utils.Time
 import kotlin.system.exitProcess
 
@@ -127,11 +128,95 @@ object TicketMachineApp {
         }
     }
     private fun normalMode() {
-        TUI.startMenu()
-        Time.sleep(2000)
-        TUI.write("Yet to implement", 0, 0, true, true)
-        TUI.write("Try M Mode", 1, 0, true, false)
-        Time.sleep(2000)
+        val stations = Stations.stations
+        if (stations.isEmpty()) return
+        fun pollCoin() {
+            if (!CoinAcceptor.coinInserted()) return
+            val id = CoinAcceptor.getCoinId()
+            if (id in 0..5) {
+                CoinDeposit.insert(id)
+            }
+            CoinAcceptor.coinAccept()
+        }
+        fun abortVending() {
+            val returned = CoinDeposit.getTotal()
+            if (returned > 0) {
+                CoinAcceptor.coinReturn()
+                CoinDeposit.cancel()
+                TUI.vendingAborted2(returned / 100.0)
+            } else {
+                TUI.vendingAborted()
+            }
+            Time.sleep(1200)
+        }
+        fun waitForPayment(station: String, required: Int): Boolean {
+            while (!M.enabled()) {
+                pollCoin()
+                val inserted = CoinDeposit.getTotal()
+                TUI.write(station, 0, 0, true, true)
+                TUI.write(
+                    "${Others.centsToEuros(inserted)}/${Others.centsToEuros(required)}${0.toChar()}",
+                    1,
+                    0,
+                    true,
+                    false
+                )
+                if (inserted >= required) return true
+                if (KBD.waitKey(200) == '#') return false
+            }
+            return false
+        }
+        var idx = 0
+        var roundTrip = false
+        while (!M.enabled()) {
+            val st = stations[idx]
+            val price = st.price * if (roundTrip) 2 else 1
+            pollCoin()
+            TUI.printTicket(st.station, idx, price / 100.0)
+            when (val key = KBD.waitKey(WAIT_KEY_MS)) {
+                'A' -> idx = if (idx > 0) idx - 1 else stations.size - 1
+                'B' -> idx = if (idx < stations.size - 1) idx + 1 else 0
+                'C' -> roundTrip = !roundTrip
+                '*' -> {
+                    TUI.toPrint(st.station, !roundTrip)
+                    if (KBD.waitKey(7000L) != '*') {
+                        abortVending()
+                        continue
+                    }
+                    if (!waitForPayment(st.station, price)) {
+                        abortVending()
+                        continue
+                    }
+                    if (!CoinDeposit.exchange(price)) {
+                        abortVending()
+                        continue
+                    }
+                    CoinAcceptor.coinCollect()
+                    TUI.processing(st.station)
+                    Time.sleep(3000)
+                    TicketDispenser.activatePrintingTicket(roundTrip, ORIGIN_STATION, idx)
+                    TUI.collectTicket(st.station)
+                    while (!HAL.isBit(INPUTPORTS.FN.mask)) {
+                        Thread.sleep(10)
+                    }
+                    TicketDispenser.lowerPrt(roundTrip, ORIGIN_STATION, idx)
+                    Stations.sold(st.station)
+                    Stations.save()
+                    TUI.collectFinished()
+                    Time.sleep(1500)
+                    return
+                }
+                '#' -> {
+                    abortVending()
+                    return
+                }
+                KBD.none -> continue
+                in '0'..'9' -> {
+                    val digit = key.digitToInt()
+                    if (digit < stations.size) idx = digit
+                }
+            }
+        }
     }
     fun init() {
         M.init()
@@ -143,13 +228,31 @@ object TicketMachineApp {
     }
     fun program() {
         while (true) {
-            Time.sleep(10)
-            if (M.enabled()) maintenanceMode() else normalMode()
+            TUI.startMenu()
+            if (M.enabled()) maintenanceMode()
+            if (KBD.waitKey(WAIT_KEY_MS) == '#') normalMode()
         }
     }
 }
 
 fun main() {
     TicketMachineApp.init()
+    println("=======================Navigation in Vending Mode=======================")
+    println("# -> Enter vending mode")
+
+    println("Inside:")
+    println("C -> Select trip type")
+    println("* -> Confirm")
+    println("# -> Abort")
+
+    println("=======================Navigation in Maintenance Mode=======================")
+    println("# -> Simulate printing ticket")
+    println("     C -> Select trip type")
+    println("     * -> Confirm")
+    println("     # -> Abort")
+    println("A -> Stations Cnt")
+    println("B -> Coins Cnt")
+    println("C -> Reset Counters")
+    println("D -> Shutdown")
     TicketMachineApp.program()
 }
