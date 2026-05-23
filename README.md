@@ -5,8 +5,8 @@
 
 Hardware:
 Key Decode ✅
-Ring Buffer ✅ ❗ (works well on modelsim)
-Key Transmitter ✅ ❗ (works well on modelsim)
+Ring Buffer ✅ ❗ (Simulated, needs confirmation on FPGA)
+Key Transmitter ✅ ❗ (Simulated, needs confirmation on FPGA)
 Port Expander LCD ✅
 Port Expander TD ✅
 Coin Acceptor ✅
