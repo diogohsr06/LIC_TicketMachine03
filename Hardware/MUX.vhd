@@ -10,6 +10,6 @@ end MUX;
 
 architecture MuxLogic of MUX is
 begin
-R <= ((X(0) and not S(0) and not S(1)) or (X(1) and not S(0) and  S(1)) or (X(2) and  S(0) and not S(1)) or (X(3) and  S(0) and  S(1)));
+R <= ((X(0) and not S(1) and not S(0)) or (X(1) and not S(1) and  S(0)) or (X(2) and  S(1) and not S(0)) or (X(3) and  S(1) and  S(0)));
    
 end MuxLogic;

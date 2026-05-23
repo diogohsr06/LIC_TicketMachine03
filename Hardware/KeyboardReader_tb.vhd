@@ -1,12 +1,10 @@
 library ieee;
-use IEEE.std_logic_1164.all;
-use IEEE.numeric_std.all;
+use ieee.std_logic_1164.all;
 
 entity KeyboardReader_tb is
 end KeyboardReader_tb;
 
 architecture behavior of KeyboardReader_tb is
-
     component KeyboardReader
         port(
             Rows  : in  std_logic_vector(3 downto 0);
@@ -18,22 +16,22 @@ architecture behavior of KeyboardReader_tb is
         );
     end component;
 
-    -- Sinais de interface
-    signal Rows  : std_logic_vector(3 downto 0) := "0000";
+    signal Rows  : std_logic_vector(3 downto 0) := (others => '1'); -- pull-up
     signal RESET : std_logic := '0';
     signal Osc   : std_logic := '0';
     signal TXclk : std_logic := '0';
     signal TXd   : std_logic;
     signal Cols  : std_logic_vector(3 downto 0);
 
-    -- Períodos de relógio
-    constant Osc_period   : time := 20 ns;   -- 50 MHz (FPGA)
-    constant TXclk_period : time := 400 ns;  -- Software (mais lento para ver bem os bits)
+    signal key_pressed : std_logic := '0';
+    signal press_row   : integer range 0 to 3 := 0;
+    signal press_col   : integer range 0 to 3 := 0;
 
+    constant OSC_PERIOD   : time := 20 ns;   -- 50 MHz
+    constant TXCLK_PERIOD : time := 400 ns;  -- clock do receiver SW
 begin
-
-    -- Instanciação do Sistema Completo
-    uut: KeyboardReader port map (
+    uut: KeyboardReader
+    port map(
         Rows  => Rows,
         RESET => RESET,
         Osc   => Osc,
@@ -42,66 +40,118 @@ begin
         Cols  => Cols
     );
 
-    -- Gerador do relógio da FPGA
-    Osc_process : process
+    osc_process : process
     begin
         Osc <= '0';
-        wait for Osc_period/2;
+        wait for OSC_PERIOD/2;
         Osc <= '1';
-        wait for Osc_period/2;
+        wait for OSC_PERIOD/2;
     end process;
 
-    -- Gerador do relógio série (PC/Kotlin)
-    -- Na realidade o Kotlin é que gera isto, aqui simulamos uma oscilação contínua
-    TXclk_process : process
+    txclk_process : process
     begin
         TXclk <= '0';
-        wait for TXclk_period/2;
+        wait for TXCLK_PERIOD/2;
         TXclk <= '1';
-        wait for TXclk_period/2;
+        wait for TXCLK_PERIOD/2;
     end process;
 
-    -- Processo de Estímulo (Simular o utilizador)
-    stim_proc: process
-    begin		
-        -- 1. Reset do sistema
-        RESET <= '1';
-        wait for 100 ns;
-        RESET <= '0';
-        wait for 200 ns;
-
-        -----------------------------------------------------------
-        -- SIMULAR PRESSÃO DA TECLA '5'
-        -----------------------------------------------------------
-        -- A tecla '5' costuma estar na Coluna 1, Linha 1.
-        -- Temos de esperar que o KeyDecode ative a Coluna 1 para puxar a Linha 1.
-        report "A aguardar varrimento de Colunas para premir tecla...";
-        
-        -- Esperamos 100 ciclos de relógio para garantir que o scanner passou por lá
-        for i in 1 to 100 loop
-            -- Se a Coluna 1 estiver ativa (assumindo lógica positiva "0010")
-            -- NOTA: Se o teu KeyDecode usar lógica negativa, altera para "1101"
-            if Cols = "0010" then 
-                Rows <= "0010"; -- Prime a Linha 1
-            else
-                Rows <= "0000"; -- Nenhuma tecla nas outras colunas
+    -- Modelo do teclado matricial:
+    -- colunas são ativas a '0'; linha fica a '0' apenas quando a tecla está premida
+    -- e a coluna dessa tecla está a ser varrida.
+    key_matrix_model : process(key_pressed, press_row, press_col, Cols)
+        variable rows_v : std_logic_vector(3 downto 0);
+    begin
+        rows_v := (others => '1');
+        if key_pressed = '1' then
+            if Cols(press_col) = '0' then
+                rows_v(press_row) := '0';
             end if;
-            wait for Osc_period;
-        end loop;
+        end if;
+        Rows <= rows_v;
+    end process;
 
-        Rows <= "0000"; -- Soltou a tecla
-        
-        -----------------------------------------------------------
-        -- OBSERVAÇÃO
-        -----------------------------------------------------------
-        -- Neste ponto, a tecla deve ter entrado no RingBuffer.
-        -- Como o KeyTransmitter está livre (KBfree = '1'), ele deve 
-        -- começar a transmitir no TXd imediatamente.
-        
-        wait for 10 us; -- Tempo para ver a trama série completa sair
+    stim_proc : process
+        procedure expect_key_code(constant expected : in integer; constant tag : in string) is
+            variable sampled : std_logic_vector(5 downto 0);
+            variable stop_b  : std_logic;
+            variable data_i  : integer;
+            variable code_i  : integer;
+            variable found   : boolean;
+        begin
+            found := false;
 
-        report "Simulação do KeyboardReader concluída!";
+            -- Espera por início de frame (TXd=0 num flanco de subida de TXclk)
+            for n in 0 to 300 loop
+                wait until rising_edge(TXclk);
+                if TXd = '0' then
+                    sampled(0) := '0';
+                    found := true;
+                    exit;
+                end if;
+            end loop;
+
+            assert found report "ERRO " & tag & ": timeout a espera de start bit" severity error;
+
+            for i in 1 to 5 loop
+                wait until rising_edge(TXclk);
+                sampled(i) := TXd;
+            end loop;
+
+            wait until rising_edge(TXclk);
+            stop_b := TXd;
+
+            assert stop_b = '1'
+                report "ERRO " & tag & ": stop bit invalido"
+                severity error;
+
+            -- Decodificacao identica ao KeyReceiver.kt:
+            -- data = bits[0..5], code = (data >> 1) & 0xF
+            data_i := 0;
+            for i in 0 to 5 loop
+                if sampled(i) = '1' then
+                    data_i := data_i + (2 ** i);
+                end if;
+            end loop;
+            code_i := (data_i / 2) mod 16;
+
+            assert code_i = expected
+                report "ERRO " & tag & ": codigo recebido diferente do esperado"
+                severity error;
+        end procedure;
+    begin
+        -- Reset
+        RESET <= '1';
+        key_pressed <= '0';
+        wait for 200 ns;
+        RESET <= '0';
+        wait for 500 ns;
+
+        -- Tecla '5' => col=1,row=1 => code 5
+        press_col <= 1;
+        press_row <= 1;
+        key_pressed <= '1';
+        expect_key_code(5, "tecla 5");
+        key_pressed <= '0';
+        wait for 2 us;
+
+        -- Tecla 'C' => col=3,row=2 => code 14
+        press_col <= 3;
+        press_row <= 2;
+        key_pressed <= '1';
+        expect_key_code(14, "tecla C");
+        key_pressed <= '0';
+        wait for 2 us;
+
+        -- Tecla '1' => col=0,row=0 => code 0
+        press_col <= 0;
+        press_row <= 0;
+        key_pressed <= '1';
+        expect_key_code(0, "tecla 1");
+        key_pressed <= '0';
+        wait for 2 us;
+
+        report "KeyboardReader_tb concluida sem erros." severity note;
         wait;
     end process;
-
 end behavior;

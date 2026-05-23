@@ -1,65 +1,35 @@
-LIBRARY IEEE;
-use IEEE.std_logic_1164.all;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity Counter3 is
-    port(
-			CE: in std_logic;
-			CLK: in std_logic;
-			RESET: in std_logic;
-			Q: out std_logic_vector(2 downto 0));
+    port (
+        CE    : in  std_logic;
+        CLK   : in  std_logic;
+        RESET : in  std_logic;
+        TC    : out std_logic;         
+        Q     : out std_logic_vector(2 downto 0)
+    );
 end Counter3;
 
-architecture arch_counter3 of Counter3 is
-component Adder3 is
-port
-(
-  A  : in std_logic_vector(2 downto 0);
-  B  : in std_logic_vector(2 downto 0);
-  S  : out std_logic_vector(2 downto 0)
-);
-end component;
-
-component Reg3 is
-port
-(
-  D: in std_logic_vector(2 downto 0);
-  MCLK: in std_logic;
-  RESET: in std_logic;
-  Q: out std_logic_vector(2 downto 0)
-);
-end component;
-
-component CountEnable3 is
-port 
-(
-  A: in std_logic_vector(2 downto 0);
-  B: in std_logic_vector(2 downto 0);
-  S: in std_logic;  
-  Y: out std_logic_vector(2 downto 0)
-);
-end component;
-
-signal QtoReg: std_logic_vector(2 downto 0);
-signal QtoAdder: std_logic_vector(2 downto 0);
-signal AdderB: std_logic_vector(2 downto 0);
+architecture arch of Counter3 is
+    signal cnt : integer range 0 to 6;
 begin
-UADD: Adder3 port map(
-       A => QtoAdder,
-		 B => AdderB,
-		 S => QtoReg);
-		 
-UREG: Reg3 port map(
-      D => QtoReg,
-		MCLK => CLK,
-		RESET => RESET,
-		Q => QtoAdder);
-		
-UCE: CountEnable3 port map(
-     A => "000",
-	  B => "001",
-	  S => CE,
-	  Y => AdderB);
-	  
-Q <= QtoAdder;
-		 
-end arch_counter3;
+    process(CLK, RESET)
+    begin
+        if RESET = '1' then
+            cnt <= 0;
+        elsif rising_edge(CLK) then
+            if CE = '1' then
+                if cnt = 6 then
+                    cnt <= 0;
+                else
+                    cnt <= cnt + 1;
+                end if;
+            end if;
+        end if;
+    end process;
+
+    Q  <= std_logic_vector(to_unsigned(cnt, 3));
+    TC <= '1' when cnt = 6 else '0';
+end arch;
