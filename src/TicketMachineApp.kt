@@ -37,11 +37,10 @@ object TicketMachineApp {
                             continue
                         }
                         TUI.processing(st.station)
+                        Time.sleep(3000)
                         TicketDispenser.activatePrintingTicket(roundTrip, ORIGIN_STATION, idx)
                         TUI.collectTicket(st.station)
-                        val start = System.currentTimeMillis()
-                        while (!HAL.isBit(INPUTPORTS.FN.mask)
-                            && System.currentTimeMillis() - start < 5000L) {
+                        while (!HAL.isBit(INPUTPORTS.FN.mask)) {
                             Thread.sleep(10)
                         }
                         TicketDispenser.lowerPrt(roundTrip, ORIGIN_STATION, idx)
