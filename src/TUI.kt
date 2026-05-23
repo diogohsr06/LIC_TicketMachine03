@@ -83,9 +83,9 @@ object TUI {
         write("${"%02d".format(code)}${1.toChar()}${2.toChar()}           $amount",
             1, 0, false, false)
     }
-    fun stationCount(station: String, count: Int) {
+    fun stationCount(station: String, idx: Int, count: Int) {
         write(station, 0, 0, true, true)
-        write("${"%02d".format(count)}${1.toChar()}${2.toChar()}           $count"
+        write("${"%02d".format(idx)}${1.toChar()}${2.toChar()}           $count"
             , 1, 0, false, false)
     }
 }
@@ -134,7 +134,7 @@ fun main() {
     Time.sleep(2000)
     TUI.printCoins(2.55, 4, 8)
     Time.sleep(2000)
-    TUI.stationCount("Wakanda", 2)
+    TUI.stationCount("Wakanda", 7, 2)
     Time.sleep(2000)
     TUI.write("Interfaces have been tested!", 0, 0, true, true)
 }
