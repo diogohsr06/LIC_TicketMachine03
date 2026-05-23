@@ -33,7 +33,7 @@ object TicketMachineApp {
                         TUI.toPrint(st.station, roundTrip)
                         if (KBD.waitKey(7000L) != '*') {
                             TUI.vendingAborted()
-                            Time.sleep(1200)
+                            Thread.sleep(1200)
                             continue
                         }
                         TUI.processing(st.station)
@@ -41,11 +41,13 @@ object TicketMachineApp {
                         TUI.collectTicket(st.station)
                         val start = System.currentTimeMillis()
                         while (!HAL.isBit(INPUTPORTS.FN.mask)
-                            && System.currentTimeMillis() - start < 10000L) {
-                            Time.sleep(50)
+                            && System.currentTimeMillis() - start < 5000L) {
+                            Thread.sleep(10)
                         }
+                        TicketDispenser.lowerPrt(roundTrip, ORIGIN_STATION, idx)
+                        Thread.sleep(200)
                         TUI.collectFinished()
-                        Time.sleep(1500)
+                        Thread.sleep(1500)
                         return
                     }
                     '#' -> {
@@ -147,7 +149,6 @@ object TicketMachineApp {
         }
     }
 }
-
 
 fun main() {
     TicketMachineApp.init()

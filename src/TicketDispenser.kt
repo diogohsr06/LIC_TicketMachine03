@@ -12,6 +12,11 @@ object TicketDispenser {
         SerialEmitter.send(SerialEmitter.Peripherial.TICKET, data)
         SerialEmitter.send(SerialEmitter.Peripherial.TICKET, printData)
     }
+    fun lowerPrt(roundTrip: Boolean, origin: Int, destination: Int) {
+        val RT = if (roundTrip) 1 else 0
+        val data = RT or destination.shl(1) or origin.shl(5)
+        SerialEmitter.send(SerialEmitter.Peripherial.TICKET, data)
+    }
 }
 
 /**Teste**/
