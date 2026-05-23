@@ -26,7 +26,7 @@ Stations ✅
 Coin Deposit ✅ 
 Others/Utils ✅
 TUI ✅ 
-TicketMachine 🟨
+TicketMachine ✅
 
 
 
