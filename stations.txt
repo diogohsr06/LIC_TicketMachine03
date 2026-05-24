@@ -1,16 +1,16 @@
-225;0;Lisboa
-200;0;Madrid
-175;0;Paris
-150;1;London
-125;0;Roma
-100;0;Berlin
-0;0;Moskva
-100;0;Bruxelles
-125;0;Amsterdam
-150;0;Kyiv
-175;0;Athina
-200;0;Wien
-225;0;Warszawa
-250;0;Kobenhavn
-275;0;Stockholm
-300;0;Constantinople
+225;0;Naboo
+200;0;Wakanda
+175;0;Hogwarts
+150;1;The Shrine
+125;0;Atenas
+100;0;Namek
+325;0;Alabasta
+100;0;Midland
+125;0;Arrakis
+150;0;Ooo
+175;0;Cyberpunk
+200;0;Radiator Springs
+225;0;Pandora
+250;0;Vice City
+275;0;Hyrule Castle
+300;0;Narnia
