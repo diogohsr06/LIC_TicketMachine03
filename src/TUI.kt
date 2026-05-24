@@ -109,13 +109,13 @@ fun main() {
 
     TUI.write("Test2: Yes/No", 0, 0, true, true)
     Time.sleep(2000)
-    val text = "Fumar faz bem?"
+    val text = "LEIC melhor curso?"
     LCD.clear()
     val yN = TUI.yesOrNo(text,5000)
     if (yN) {
         TUI.write("You chose Yes", 0, 0, true, true)
     } else {
-        TUI.write("Faz sim.", 0, 0, true, true)
+        TUI.write("You chose No", 0, 0, true, true)
     }
     Time.sleep(5000)
 

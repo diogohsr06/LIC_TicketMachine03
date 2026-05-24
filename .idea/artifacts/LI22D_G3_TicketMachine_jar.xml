@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="LI22D_G3_TicketMachine.jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/LI22D_G3_TicketMachine_jar</output-path>
+    <root id="archive" name="UsbPort3.jar">
+      <element id="module-output" name="UsbPort3" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/ticketMachine.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-stdlib/2.3.0/kotlin-stdlib-2.3.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jetbrains/annotations/13.0/annotations-13.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
