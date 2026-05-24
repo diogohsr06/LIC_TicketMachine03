@@ -1,32 +1,34 @@
-✅ Done
-❗ Needs testing
-🟨 Incomplete/on going
-❌ Yet to implement
+# Extract the ideas, everyone makes mistakes
 
-Hardware:
-Key Decode ✅
-Ring Buffer ✅ ❗ (Simulated, needs confirmation on FPGA)
-Key Transmitter ✅ ❗ (Simulated, needs confirmation on FPGA)
-Port Expander LCD ✅
-Port Expander TD ✅
-Coin Acceptor ✅
-M ✅
+✅ Done  
+❗ Needs testing  
+🟨 Incomplete/on going  
+❌ Yet to implement  
 
-Software:
-HAL ✅
-KBD ✅ 
-KeyReceiver ✅ 
-Serial Emitter ✅
-LCD ✅
-Ticket Dispenser ✅ 
-Coin acceptor ✅
-M ✅
-File Access ✅
-Stations ✅
-Coin Deposit ✅ 
-Others/Utils ✅
-TUI ✅ 
-TicketMachine ✅
+**Hardware**:  
+Key Decode ✅  
+Ring Buffer ✅ ❗ (Simulated, needs confirmation on FPGA)  
+Key Transmitter ✅ ❗ (Simulated, needs confirmation on FPGA)  
+Port Expander LCD ✅  
+Port Expander TD ✅  
+Coin Acceptor ✅  
+M ✅  
+
+**Software**:  
+HAL ✅  
+KBD ✅  
+KeyReceiver ✅  
+Serial Emitter ✅  
+LCD ✅  
+Ticket Dispenser ✅  
+Coin acceptor ✅  
+M ✅  
+File Access ✅  
+Stations ✅  
+Coin Deposit ✅  
+Others/Utils ✅  
+TUI ✅  
+TicketMachine ✅  
 
 
 
