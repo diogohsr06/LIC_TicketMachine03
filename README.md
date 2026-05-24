@@ -1,4 +1,4 @@
-Extract the ideas, everyone makes mistakes
+# Extract the ideas, everyone makes mistakes
 
 ✅ Done
 ❗ Needs testing
