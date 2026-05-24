@@ -10,7 +10,7 @@ entity TDelay_Timer is
     );
 end TDelay_Timer;
 
-architecture Structural of TDelay_Timer is
+architecture arch_tmr of TDelay_Timer is
 component CLKDIV500 is
     generic( div: natural := 25000000 );
     port ( 
@@ -61,4 +61,4 @@ begin
     end case;
 end process;
 
-end Structural;
+end arch_tmr;
