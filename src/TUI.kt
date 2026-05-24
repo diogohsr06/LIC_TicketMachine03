@@ -32,7 +32,6 @@ object TUI {
         KBD.init()
     }
     fun startMenu() {
-        LCD.clear()
         write("Ticket to Ride", 0, 0, true, true)
         val dateStr = dateFormatter.format(Date())
         write(dateStr, 1, 0, true, false)
