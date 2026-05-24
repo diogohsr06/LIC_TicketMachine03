@@ -1,9 +1,9 @@
 # Extract the ideas, everyone makes mistakes
 
-✅ Done
-❗ Needs testing
-🟨 Incomplete/on going
-❌ Yet to implement
+✅ Done  
+❗ Needs testing  
+🟨 Incomplete/on going  
+❌ Yet to implement  
 
 **Hardware**:  
 Key Decode ✅  
