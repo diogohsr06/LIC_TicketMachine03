@@ -1,10 +1,12 @@
-✅ Done
-❗ Needs testing
-🟨 Incomplete/on going
-❌ Yet to implement
+##Extract the ideas, everyone makes mistakes
 
-Hardware:
-Key Decode ✅
+###✅ Done
+###❗ Needs testing
+###🟨 Incomplete/on going
+###❌ Yet to implement
+
+###**Hardware**:
+Key Decode ✅--
 Ring Buffer ✅ ❗ (Simulated, needs confirmation on FPGA)
 Key Transmitter ✅ ❗ (Simulated, needs confirmation on FPGA)
 Port Expander LCD ✅
@@ -12,7 +14,7 @@ Port Expander TD ✅
 Coin Acceptor ✅
 M ✅
 
-Software:
+###**Software**:
 HAL ✅
 KBD ✅ 
 KeyReceiver ✅ 
