@@ -71,6 +71,13 @@ set_location_assignment PIN_A10 -to Collect
 set_location_assignment PIN_A12 -to M
 
 #============================================================
+# M
+#============================================================
+
+set_location_assignment PIN_B12 -to Tdelay[0]
+#set_location_assignment PIN_A13 -to Tdelay[1]
+
+#============================================================
 # KBD
 #============================================================
 set_location_assignment PIN_W5 -to Rows[0]
@@ -219,9 +226,14 @@ set_global_assignment -name VHDL_FILE KeyTransmitter_tb.vhd
 set_global_assignment -name VHDL_FILE RingBuffer_tb.vhd
 set_global_assignment -name VHDL_FILE KeyboardReader_tb.vhd
 set_global_assignment -name VHDL_FILE CoinAcceptor.vhd
+
+
+set_global_assignment -name VHDL_FILE TDelay_Decoder.vhd
+set_global_assignment -name VHDL_FILE CLKDIV500.vhd
+set_global_assignment -name VHDL_FILE TDelay_Timer.vhd
+set_global_assignment -name VHDL_FILE tb_MAC.vhd
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-
 
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

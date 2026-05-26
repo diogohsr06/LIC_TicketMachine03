@@ -19,44 +19,53 @@ entity RBC is
 end RBC;
 
 architecture arch_RBC of RBC is
-component FlipFlop IS
-PORT(	CLK : in std_logic;
-		RESET : in STD_LOGIC;
-		SET : in std_logic;
-		D : IN STD_LOGIC;
-		EN : IN STD_LOGIC;
-		Q : out std_logic
-		);
-END component;
-
-signal Q1, Q0, D1, D0: std_logic;
-
+    type state_type is (IDLE, PUSH, WAIT_DAV, POP, LOAD_TX);
+    signal state, next_state : state_type;
 begin
-FF1: FlipFlop port map (
-	  CLK => CLK,
-	  RESET => RESET,
-	  SET => '0',
-	  D => D1,
-	  EN => '1',
-	  Q => Q1);
-	  
-FF0: FlipFlop port map (
-	  CLK => CLK,
-	  RESET => RESET,
-	  SET => '0',
-	  D => D0,
-	  EN => '1',
-	  Q => Q0);
+    process(CLK, RESET)
+    begin
+        if RESET = '1' then
+            state <= IDLE;
+        elsif rising_edge(CLK) then
+            state <= next_state;
+        end if;
+    end process;
 
-D1 <= (not Q1 and not Q0 and (not DAV and not empty and CTS)) or (not Q1 and Q0) or (Q1 and not Q0 and DAV);
+    process(state, DAV, empty, full, CTS)
+    begin
+        -- Valores por defeito para evitar inferência de latches
+        Wr <= '0'; selPG <= '0'; incPut <= '0'; incGet <= '0'; Wreg <= '0'; DAC <= '0';
+        next_state <= state;
 
-D0 <= (not Q1 and not Q0 and (not DAV and not empty and CTS)) or (not Q1 and not Q0 and (DAV and not full));
+        case state is
+            when IDLE =>
+                if DAV = '1' and full = '0' then
+                    next_state <= PUSH;
+                elsif DAV = '0' and empty = '0' and CTS = '1' then
+                    next_state <= POP;
+                end if;
 
-selPG <= (not (Q1) and Q0);
-wr <= (not (Q1) and Q0);
-incPut <= (not (Q1) and Q0);
-DAC <= (Q1 and not (Q0));
-Wreg <= (Q1 and Q0);
-incGet <= (Q1 and Q0);
+            when PUSH =>
+                Wr <= '1';
+                incPut <= '1';
+                DAC <= '1'; -- Confirma a receção ao KeyDecode
+                next_state <= WAIT_DAV;
 
+            when WAIT_DAV =>
+                DAC <= '1'; -- Mantém o acknowledge até o KeyDecode baixar o DAV
+                if DAV = '0' then
+                    next_state <= IDLE;
+                end if;
+
+            when POP =>
+                selPG <= '1'; -- Prepara o endereço de leitura da RAM
+                next_state <= LOAD_TX;
+
+            when LOAD_TX =>
+                selPG <= '1';
+                incGet <= '1';
+                Wreg <= '1'; -- Dispara o carregamento para o Transmissor
+                next_state <= IDLE;
+        end case;
+    end process;
 end arch_RBC;
