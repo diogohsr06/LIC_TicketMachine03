@@ -155,6 +155,6 @@ Collect <= O6;
 Eject <= O5;
 Accept <= O4;
 Prt <= D9_out;
-
+ --
 end arch_TM;
 	 
