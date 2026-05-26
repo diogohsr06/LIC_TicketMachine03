@@ -9,20 +9,25 @@ entity TicketMachine is
 			Coin: in std_logic;
 			Rows: in std_logic_vector(3 downto 0);
 			RESET: in std_logic;
+			Tdelay: in std_logic_vector(1 downto 0);
 			Osc: in std_logic;
 			CT: in std_logic;
 			
 			Cols: out std_logic_vector(3 downto 0);
 			D9: out std_logic;
 			D: out std_logic_vector(8 downto 0);
-			HEX0, HEX1, HEX2, HEX3, HEX4, HEX5: out STD_LOGIC_VECTOR(7 downto 0));
+			HEX0, HEX1, HEX2, HEX3, HEX4, HEX5: out STD_LOGIC_VECTOR(7 downto 0);
+			Collect: out std_logic;
+			Eject: out std_logic;
+			Accept: out std_logic;
+			Prt: out std_logic);
 end TicketMachine;
 
 architecture arch_TM of TicketMachine is
 component KeyboardReader is
     port(
 			Rows: in std_logic_vector(3 downto 0);
-			--Tdelay: in std_logic_vector(1 downto 0);
+			Tdelay: in std_logic_vector(1 downto 0);
 			RESET: in std_logic;
 			Osc: in std_logic;
 			TXclk: in std_logic;
@@ -85,6 +90,7 @@ I0 <= CoinId(0);
 KR: KeyboardReader port map(
 	 Rows => Rows,
 	 RESET => RESET,
+	 Tdelay => Tdelay,
 	 Osc => Osc,
 	 TXclk => O7,
 	 TXd => I7,
@@ -145,6 +151,10 @@ O4 <= Output_usb(4);
 O5 <= Output_usb(5);
 O6 <= Output_usb(6);
 O7 <= Output_usb(7);
+Collect <= O6;
+Eject <= O5;
+Accept <= O4;
+Prt <= D9_out;
 
 end arch_TM;
 	 

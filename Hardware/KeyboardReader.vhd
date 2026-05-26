@@ -4,7 +4,7 @@ use IEEE.std_logic_1164.all;
 entity KeyboardReader is
     port(
 			Rows: in std_logic_vector(3 downto 0);
-			--Tdelay: in std_logic_vector(1 downto 0);
+			Tdelay: in std_logic_vector(1 downto 0);
 			RESET: in std_logic;
 			Osc: in std_logic;
 			TXclk: in std_logic;
@@ -18,7 +18,7 @@ component KeyDecode is
     port
         (
          Kack: in std_logic;
-			--Tdelay: in std_logic_vector(1 downto 0);
+			Tdelay: in std_logic_vector(1 downto 0);
 			Rows: in std_logic_vector(3 downto 0);
 			RESET: in std_logic;
 			Osc: in std_logic;
@@ -64,6 +64,7 @@ KD: KeyDecode port map (
 	 Kack => DAC_out,
 	 Rows => Rows,
 	 RESET => RESET,
+	 Tdelay => Tdelay,
 	 Osc => Osc,
 	 Cols => Cols,
 	 K => K_out,
