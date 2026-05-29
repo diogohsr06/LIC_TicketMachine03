@@ -8,7 +8,7 @@
 **Hardware**:  
 Key Decode ✅  
 Ring Buffer ✅ ❗   
-Key Transmitter ✅ ❗ 
+Key Transmitter ✅ ❗  
 ❗Issue: Stops transmitting after first key, reliant on RESET for more keys. This has been fixed on ModelSim Recently for good, still needs real hardware testing. Cause: RBC was stuck on reading state, incGet is never activated, thus, read pointer never advances, causing it to be stuck on the first key. RESET fixed this by clearing the registers, forcing the machine to initial state.  
 Port Expander LCD ✅  
 Port Expander TD ✅  
