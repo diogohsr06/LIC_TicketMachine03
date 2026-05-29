@@ -7,8 +7,8 @@
 
 **Hardware**:  
 Key Decode ✅  
-Ring Buffer ✅ ❗ (Simulated, needs confirmation on FPGA)  
-Key Transmitter ✅ ❗ (Simulated, needs confirmation on FPGA)  
+Ring Buffer ✅ ❗ | Issue: Stops transmitting after first key, reliant on RESET for more keys. Fixed on ModelSim Recently for good, still needs real hardware testing
+Key Transmitter ✅ ❗ | Issue: Stops transmitting after first key, reliant on RESET for more keys. Fixed on ModelSim Recently for good, still needs real hardware testing
 Port Expander LCD ✅  
 Port Expander TD ✅  
 Coin Acceptor ✅  
