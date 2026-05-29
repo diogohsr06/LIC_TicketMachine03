@@ -7,18 +7,23 @@ object KeyReceiver {
     }
     fun serialReceiver(): Int {
         if (HAL.isBit(INPUTPORTS.TXD.mask)) return -1
-        var data = 0
+        var frame = 0
         for (i in 0 until 6) {
             HAL.setBits(OUTPUTPORTS.TXclk.mask)
-            if (HAL.isBit(INPUTPORTS.TXD.mask)) {
-                data = data or (1 shl i)
-            }
             HAL.clrBits(OUTPUTPORTS.TXclk.mask)
+            val TXD = if (HAL.isBit(INPUTPORTS.TXD.mask)) 1 else 0
+            frame = frame or (TXD shl i)
         }
         HAL.setBits(OUTPUTPORTS.TXclk.mask)
-        val STOP = HAL.isBit(INPUTPORTS.TXD.mask)
         HAL.clrBits(OUTPUTPORTS.TXclk.mask)
-        return if (STOP) data shr 1 and 0xF else -1
+        val startBit = frame and 0b000001
+        val endBit = (frame and 0b100000).shr(5)
+        val key = frame and 0b011110
+        return when {
+            startBit == 0 -> -1
+            endBit == 1 -> -1
+            else -> (key shr 1) and 0b1111
+        }
     }
 }
 /**Teste**/

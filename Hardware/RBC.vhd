@@ -2,70 +2,40 @@ library ieee;
 use IEEE.std_logic_1164.all;
 
 entity RBC is
-    port(
-			CLK: in std_logic;
-			RESET: in std_logic;
-			DAV: in std_logic;
-			CTS: in std_logic;
-			full: in std_logic;
-			empty: in std_logic;
-			
-			Wr: out std_logic;
-			selPG: out std_logic;
-			incPut: out std_logic;
-			incGet: out std_logic;
-			Wreg: out std_logic;
-			DAC: out std_logic);
+    port (
+        CLK, RESET : in std_logic;
+        DAV, CTS, full, empty : in std_logic;
+        Wr, PnG, incPut, incGet, Wreg, DAC : out std_logic
+    );
 end RBC;
 
 architecture arch_RBC of RBC is
-    type state_type is (IDLE, PUSH, WAIT_DAV, POP, LOAD_TX);
-    signal state, next_state : state_type;
+    component FlipFlop IS
+        PORT( CLK, RESET, SET, D, EN : in std_logic; Q : out std_logic );
+END component;
+
+signal D0, D1, D2, Q0, Q1, Q2 : std_logic;
+signal S, R : std_logic; 
+
 begin
-    process(CLK, RESET)
-    begin
-        if RESET = '1' then
-            state <= IDLE;
-        elsif rising_edge(CLK) then
-            state <= next_state;
-        end if;
-    end process;
+    
+S <= DAV and (not full);
+R <= CTS and (not empty);
 
-    process(state, DAV, empty, full, CTS)
-    begin
-        -- Valores por defeito para evitar inferência de latches
-        Wr <= '0'; selPG <= '0'; incPut <= '0'; incGet <= '0'; Wreg <= '0'; DAC <= '0';
-        next_state <= state;
+F2: FlipFlop port map(CLK => CLK, RESET => RESET, SET => '0', D => D2, EN => '1', Q => Q2);
+F1: FlipFlop port map(CLK => CLK, RESET => RESET, SET => '0', D => D1, EN => '1', Q => Q1);
+F0: FlipFlop port map(CLK => CLK, RESET => RESET, SET => '0', D => D0, EN => '1', Q => Q0);
 
-        case state is
-            when IDLE =>
-                if DAV = '1' and full = '0' then
-                    next_state <= PUSH;
-                elsif DAV = '0' and empty = '0' and CTS = '1' then
-                    next_state <= POP;
-                end if;
+D2 <= (not Q2 and Q1 and Q0) or (not Q2 and not Q1 and not Q0 and R) or (Q2 and not Q1 and not Q0 and DAV);
+D1 <= (not Q2 and not Q1 and Q0) or (not Q2 and Q1 and not Q0) or (Q2 and not Q1 and Q0);
+D0 <= (not Q2 and not Q1 and not Q0 and S) or (not Q2 and Q1 and not Q0) or (Q2 and not Q1 and not Q0 and DAV);
 
-            when PUSH =>
-                Wr <= '1';
-                incPut <= '1';
-                DAC <= '1'; -- Confirma a receção ao KeyDecode
-                next_state <= WAIT_DAV;
+    
+Wr     <= (not Q2 and Q1 and not Q0);          
+PnG    <= (not Q2 and not Q1 and Q0) or (not Q2 and Q1 and not Q0); 
+incPut <= (not Q2 and Q1 and Q0);              
+DAC    <= (Q2 and not Q1 and not Q0);          
+Wreg   <= (Q2 and not Q1 and Q0);             
+incGet <= (Q2 and Q1 and not Q0);              
 
-            when WAIT_DAV =>
-                DAC <= '1'; -- Mantém o acknowledge até o KeyDecode baixar o DAV
-                if DAV = '0' then
-                    next_state <= IDLE;
-                end if;
-
-            when POP =>
-                selPG <= '1'; -- Prepara o endereço de leitura da RAM
-                next_state <= LOAD_TX;
-
-            when LOAD_TX =>
-                selPG <= '1';
-                incGet <= '1';
-                Wreg <= '1'; -- Dispara o carregamento para o Transmissor
-                next_state <= IDLE;
-        end case;
-    end process;
 end arch_RBC;
