@@ -4,7 +4,7 @@ use IEEE.numeric_std.ALL;
 
 entity CLKDIV500 is
     generic(
-        div: natural := 25000000 
+        div: natural := 25000000
     );
     port ( 
         clk_in   : in  std_logic;

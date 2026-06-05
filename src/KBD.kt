@@ -49,6 +49,6 @@ object KBD {
 fun main() {
     KBD.init()
     while(true) {
-        println("Key: ${KBD.waitKey(10000)}")
+        println("Key: ${KBD.waitKey(100000)}")
     }
 }

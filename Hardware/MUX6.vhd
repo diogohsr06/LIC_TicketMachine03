@@ -1,21 +1,28 @@
-library IEEE;
-use IEEE.std_logic_1164.all;
+LIBRARY ieee;
+USE ieee.STD_LOGIC_1164.ALL;
 
-entity MUX6 is
-    port(
-		   X: in std_logic_vector(5 downto 0);
-		   S: in std_logic_vector(2 downto 0);
-		   R: out std_logic);
-end MUX6;
+ENTITY MUX6 IS
+    PORT (
+		D : in STD_LOGIC_VECTOR(7 downto 0);
+		S : in STD_LOGIC_VECTOR(2 downto 0);
+		Q: out STD_LOGIC
+    );
+END MUX6;
 
-architecture arch_mux6 of MUX6 is
-begin
-    with S select
-        R <= X(0) when "000",
-             X(1) when "001",
-             X(2) when "010",
-             X(3) when "011",
-             X(4) when "100",
-             X(5) when "101",
-             '0'  when others;
-end arch_mux6;
+ARCHITECTURE arch_MUX6 OF MUX6 IS
+BEGIN
+    process(D, S)
+			begin
+				case S is
+					when "000" => Q <= D(0);
+					when "001" => Q <= D(1);
+					when "010" => Q <= D(2);
+					when "011" => Q <= D(3);
+					when "100" => Q <= D(4);
+					when "101" => Q <= D(5);
+					when "110" => Q <= D(6);
+					when "111" => Q <= D(7);
+					when others => Q <= '1'; -- 0
+				end case;
+			end process;
+END arch_MUX6;

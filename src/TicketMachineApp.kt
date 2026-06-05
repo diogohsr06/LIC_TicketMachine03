@@ -31,7 +31,7 @@ object TicketMachineApp {
                     'C' -> roundTrip = !roundTrip
                     '*' -> {
                         val st = stations[idx]
-                        TUI.toPrint(st.station, !roundTrip)
+                        TUI.toPrint(st.station, !roundTrip) 
                         if (KBD.waitKey(7000L) != '*') {
                             TUI.vendingAborted()
                             Thread.sleep(1200)

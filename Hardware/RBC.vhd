@@ -26,9 +26,9 @@ F2: FlipFlop port map(CLK => CLK, RESET => RESET, SET => '0', D => D2, EN => '1'
 F1: FlipFlop port map(CLK => CLK, RESET => RESET, SET => '0', D => D1, EN => '1', Q => Q1);
 F0: FlipFlop port map(CLK => CLK, RESET => RESET, SET => '0', D => D0, EN => '1', Q => Q0);
 
-D2 <= (not Q2 and Q1 and Q0) or (not Q2 and not Q1 and not Q0 and R) or (Q2 and not Q1 and not Q0 and DAV);
+D2 <= (not Q2 and not Q1 and not Q0 and (not S) and R) or (not Q2 and Q1 and Q0) or (Q2 and not Q1 and not Q0 and DAV) or (Q2 and not Q1 and Q0);
 D1 <= (not Q2 and not Q1 and Q0) or (not Q2 and Q1 and not Q0) or (Q2 and not Q1 and Q0);
-D0 <= (not Q2 and not Q1 and not Q0 and S) or (not Q2 and Q1 and not Q0) or (Q2 and not Q1 and not Q0 and DAV);
+D0 <= (not Q2 and not Q1 and not Q0 and (S or R)) or (not Q2 and Q1 and not Q0);
 
     
 Wr     <= (not Q2 and Q1 and not Q0);          

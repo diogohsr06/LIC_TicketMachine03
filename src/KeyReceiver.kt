@@ -16,14 +16,12 @@ object KeyReceiver {
         }
         HAL.setBits(OUTPUTPORTS.TXclk.mask)
         HAL.clrBits(OUTPUTPORTS.TXclk.mask)
-        val startBit = frame and 0b000001
-        val endBit = (frame and 0b100000).shr(5)
+        val start = frame and 0b000001
+        val stop = (frame and 0b100000).shr(5)
         val key = frame and 0b011110
-        return when {
-            startBit == 0 -> -1
-            endBit == 1 -> -1
-            else -> (key shr 1) and 0b1111
-        }
+        if (start == 0) return -1
+        if (stop == 1) return -1
+        else return (key shr 1) and 0b1111
     }
 }
 /**Teste**/

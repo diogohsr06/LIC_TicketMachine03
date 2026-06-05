@@ -1,98 +1,116 @@
-library ieee;
-use ieee.std_logic_1164.all;
+LIBRARY ieee;
+USE ieee.STD_LOGIC_1164.ALL;
 
-entity KeyTransmitter is
-    port(
-        Load   : in std_logic;
-        D      : in std_logic_vector(3 downto 0);
-        TXclk  : in std_logic;
-        RESET  : in std_logic;
-        KBfree : out std_logic;
-        TXd    : out std_logic
+ENTITY KeyTransmitter IS
+    PORT (
+        clk: IN STD_LOGIC;
+        Load: IN STD_LOGIC;                  
+        D: IN STD_LOGIC_VECTOR(3 DOWNTO 0);  
+        TX_clk: IN STD_LOGIC;                
+        RESET : IN STD_LOGIC;
+        KBfree: OUT STD_LOGIC;               
+        TX_D: OUT STD_LOGIC                  
     );
-end KeyTransmitter;
+END KeyTransmitter;
 
-architecture arch_KT of KeyTransmitter is
-    component Reg is
-        port(
-            D     : in std_logic_vector(3 downto 0);
-            MCLK  : in std_logic;
-            RESET : in std_logic;
-            Q     : out std_logic_vector(3 downto 0)
+ARCHITECTURE arch_KT OF KeyTransmitter IS
+    COMPONENT KTC
+        PORT(
+            Load : IN STD_LOGIC;
+            Tcount : IN STD_LOGIC;
+            clk : IN STD_LOGIC;
+            reset : IN STD_LOGIC;
+            KBfree : OUT STD_LOGIC;
+            Ereg : OUT STD_LOGIC;
+            Ecounter : OUT STD_LOGIC;
+            Rcounter : OUT STD_LOGIC
         );
-    end component;
-
-    component Counter3 is
-        port(
-            CE    : in std_logic;
-            CLK   : in std_logic;
-            RESET : in std_logic;
-            TC    : out std_logic;
-            Q     : out std_logic_vector(2 downto 0)
+    END COMPONENT;
+    COMPONENT Counter3 
+        PORT(
+            CE, CLK, RESET: IN STD_LOGIC;
+            TC: OUT STD_LOGIC;
+            Q : OUT STD_LOGIC_VECTOR(2 downto 0)
         );
-    end component;
-
-    component MUX6 is
-        port(
-            X : in std_logic_vector(5 downto 0);
-            S : in std_logic_vector(2 downto 0);
-            R : out std_logic
+    END COMPONENT;
+        
+    COMPONENT RegKT
+        PORT(
+            F : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
+            CE, RESET : IN STD_LOGIC;
+            CLK : IN STD_LOGIC;
+            Q : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
         );
-    end component;
+    END COMPONENT;
 
-    component KTC is
-        port(
-            Load     : in  std_logic;
-            RESET    : in  std_logic;
-            cntDone  : in  std_logic;
-            TXactive : out std_logic;
-            KBfree   : out std_logic
+    COMPONENT MUX6 
+        PORT( 
+            D : in STD_LOGIC_VECTOR(7 downto 0);
+            S : in STD_LOGIC_VECTOR(2 downto 0);
+            Q: out STD_LOGIC
         );
-    end component;
+    END COMPONENT;
 
-    signal dataQ        : std_logic_vector(3 downto 0);
-    signal counterQ     : std_logic_vector(2 downto 0);
-    signal muxOut       : std_logic;
-    signal txActive_s   : std_logic;
-    signal cntDone_s    : std_logic;
-    signal counterReset : std_logic;
-    signal txclk_n      : std_logic;
-begin
-    UREG: Reg port map(
-        D     => D,
-        MCLK  => Load,
-        RESET => RESET,
-        Q     => dataQ
-    );
-
-    UKTC: KTC port map(
-        Load     => Load,
-        RESET    => RESET,
-        cntDone  => cntDone_s,
-        TXactive => txActive_s,
-        KBfree   => KBfree
-    );
+    SIGNAL TC_s, Ecounter_s, Rcounter_s, Ereg_s, KBfree_s: STD_LOGIC;
+    SIGNAL Count_s : STD_LOGIC_VECTOR(2 DOWNTO 0);
+    SIGNAL Q_s : STD_LOGIC_VECTOR(3 DOWNTO 0);
+    SIGNAL D_mux : STD_LOGIC_VECTOR(7 DOWNTO 0);
+    SIGNAL Mux_Out_s : STD_LOGIC;
     
-    counterReset <= RESET or (not txActive_s);
-    txclk_n <= not TXclk;
+BEGIN
+
+    KBfree <= KBfree_s;
+
+    D_mux(0) <= '0';        
+    D_mux(1) <= '1';        
+    D_mux(2) <= Q_s(0);     
+    D_mux(3) <= Q_s(1);    
+    D_mux(4) <= Q_s(2);     
+    D_mux(5) <= Q_s(3);     
+    D_mux(6) <= '0';        
+    D_mux(7) <= '1';        
+
+    TX_D <= Mux_Out_s WHEN KBfree_s = '0' ELSE '1';
+
     
-    UCOUNTER: Counter3 port map(
-        CE    => '1',
-        CLK   => txclk_n,
-        RESET => counterReset,
-        TC    => cntDone_s,
-        Q     => counterQ
-    );
-    UMUX: MUX6 port map(
-        X(0) => '1',        
-        X(1) => dataQ(0),   
-        X(2) => dataQ(1),  
-        X(3) => dataQ(2),   
-        X(4) => dataQ(3),   
-        X(5) => '0',        
-        S    => counterQ,
-        R    => muxOut
-    );
-    TXd <= muxOut when txActive_s = '1' else '1';
-    
-end arch_KT;
+    u_key_transmitter_control : KTC
+        PORT MAP(
+            Load => Load,
+            Tcount => TC_s,
+            clk => clk,
+            reset => reset,
+            KBfree => KBfree_s,
+            Ereg => Ereg_s,
+            Ecounter => Ecounter_s,
+            Rcounter => Rcounter_s
+        );
+
+   
+    u_reg : RegKT
+        PORT MAP(
+            F => D,
+            CE => Ereg_s,
+            RESET => reset,
+            CLK => clk,
+            Q => Q_s
+        );
+
+   
+    u_KT_counter : Counter3
+        PORT MAP(
+            CE => Ecounter_s,
+            CLK => TX_clk,
+            RESET => Rcounter_s,
+            TC => TC_s,
+            Q => Count_s
+        );
+
+   
+    u_KT_mux : MUX6
+        PORT MAP(
+            D => D_mux,
+            S => Count_s,
+            Q => Mux_Out_s
+        );
+
+END arch_KT;

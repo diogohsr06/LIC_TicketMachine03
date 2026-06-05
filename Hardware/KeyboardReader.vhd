@@ -34,22 +34,23 @@ component RingBuffer is
 			RESET: in std_logic;
 			CTS: in std_logic;
 			DAV: in std_logic;
-			D: in std_logic_vector(3 downto 0);
+			Din: in std_logic_vector(3 downto 0);
 			
 			Wreg: out std_logic;
-			Q: out std_logic_vector(3 downto 0);
+			Dout: out std_logic_vector(3 downto 0);
 			DAC: out std_logic);
 end component;
 
 component KeyTransmitter is
     port(
+			clk: in std_logic;
 			Load: in std_logic;
 			D: in std_logic_vector(3 downto 0);
-			TXclk: in std_logic;
+			TX_clk: in std_logic;
 			RESET: in std_logic;
 			
 			KBfree: out std_logic;
-			TXd: out std_logic);
+			TX_D: out std_logic);
 end component;
 
 signal DAC_out: std_logic;
@@ -75,17 +76,18 @@ RB: RingBuffer port map (
 	 RESET => RESET,
 	 CTS => KBfree_out,
 	 DAV => Kval_out,
-	 D => K_out,
+	 Din => K_out,
 	 Wreg => Wreg_out,
-	 Q => Q_out,
+	 Dout => Q_out,
 	 DAC => DAC_out);
 	 
 KT: KeyTransmitter port map (
+	 clk => Osc,
 	 Load => Wreg_out,
 	 D => Q_out,
-	 TXclk => TXclk,
+	 TX_clk => TXclk,
 	 RESET => RESET,
 	 KBfree => KBfree_out,
-	 TXd => TXd);
+	 TX_D => TXd);
 	 
 end arch_kbreader;
