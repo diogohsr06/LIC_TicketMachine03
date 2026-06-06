@@ -6,10 +6,9 @@
 ❌ Yet to implement  
 
 **Hardware**:  
-Key Decode ✅ ❗  
+Key Decode ✅    
 Ring Buffer ✅    
 Key Transmitter ✅  
-❗Issue: Keyboard works normally. Yet to test TDelay. Ring buffer gets empty too quick, however not its problem. Key codes not matching. Key decode needs checking  
 Port Expander LCD ✅  
 Port Expander TD ✅  
 Coin Acceptor ✅  
