@@ -1,0 +1,25 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="LI22D_G3_TICKETMACHINE.jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/LI22D_G3_TICKETMACHINE_jar</output-path>
+    <root id="archive" name="LI22D_G3_TICKETMACHINE.jar">
+      <element id="module-output" name="UsbPort3" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/ticketMachine.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-stdlib/2.3.0/kotlin-stdlib-2.3.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jetbrains/annotations/13.0/annotations-13.0.jar" path-in-jar="/" />
+      <element id="file-copy" path="$PROJECT_DIR$/CoinDeposit.txt" />
+      <element id="file-copy" path="$PROJECT_DIR$/ftd2xx64.h" />
+      <element id="file-copy" path="$PROJECT_DIR$/hardware.simul" />
+      <element id="file-copy" path="$PROJECT_DIR$/keyboard_lcd.simul" />
+      <element id="file-copy" path="$PROJECT_DIR$/libftd2xx.so" />
+      <element id="file-copy" path="$PROJECT_DIR$/libftd2xx64.so" />
+      <element id="file-copy" path="$PROJECT_DIR$/stations.txt" />
+      <element id="file-copy" path="$PROJECT_DIR$/ticketMachine.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/TicketMachine.simul" />
+      <element id="file-copy" path="$PROJECT_DIR$/USB_PORT.properties" />
+      <element id="file-copy" path="$PROJECT_DIR$/UsbPort3.iml" />
+      <element id="file-copy" path="$PROJECT_DIR$/testCoins.txt" />
+      <element id="file-copy" path="$PROJECT_DIR$/testStations.txt" />
+      <element id="file-copy" path="$PROJECT_DIR$/Simul.properties" />
+    </root>
+  </artifact>
+</component>

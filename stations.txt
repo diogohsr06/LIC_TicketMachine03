@@ -1,16 +1,36 @@
-225;0;Naboo
-200;0;Wakanda
-175;0;Hogwarts
-150;1;The Shrine
-125;0;Atenas
-100;0;Namek
-325;0;Alabasta
-100;0;Midland
-125;0;Arrakis
-150;0;Ooo
+225;0;Star Wars
+200;0;GOT
+175;0;Adventure Time
+150;0;LOTR
+125;0;Dune
+100;0;Dragon Ball
+325;0;Beyblade
+100;0;Evangelion
+125;0;Max Steel
+150;0;Saint Seiya
 175;0;Cyberpunk
-200;0;Radiator Springs
-225;0;Pandora
-250;0;Vice City
-275;0;Hyrule Castle
-300;0;Narnia
+200;0;Nutri Ventures
+225;0;Cars
+250;0;GTA
+225;0;The Walking Dead
+275;0;Smallvile
+300;0;Code Geass
+499;0;Gormitti
+300;0;Winx Club
+275;0;Johnny Test
+150;0;Devil May Cry
+1;0;Berserk
+50;0;Sailor Moon
+499;0;Oliver e Benji
+123;0;Attack On Titan
+150;0;Fight Club
+175;0;Breaking Bad
+200;0;The Last of Us
+300;0;Death Note
+125;0;Until Dawn
+75;0;Pokemon
+225;0;Lego Ninjago
+150;0;Lazytown
+275;0;Troy
+95;0;Teen Titans
+130;0;Red Dead Redemption

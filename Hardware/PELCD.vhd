@@ -1,18 +1,26 @@
+---------------------------------------------------------------------------------------------
+-- Port Expander LCD
+---------------------------------------------------------------------------------------------
+
 library ieee;
 use IEEE.std_logic_1164.all;
 
 entity PELCD is
     port
         (
-			SDX: in std_logic;
-			SCLK: in std_logic;
-			SS: in std_logic;
-			RESET: in std_logic;
-			D9: out std_logic;
-			D: out std_logic_vector(8 downto 0));
+			--Inputs
+			SDX: in std_logic;							--Serial Data in
+			SCLK: in std_logic;							--Relogio
+			SS: in std_logic;								--Enable
+			RESET: in std_logic;							--Reinicia o sistema
+			
+			--Outputs
+			D9: out std_logic;							--MSB Data out
+			D: out std_logic_vector(8 downto 0));	--Data out
 end PELCD;
 
 architecture arch_PELCD of PELCD is
+--Serial Receiver
 component SerialReceiver is
     port
         (
@@ -25,7 +33,7 @@ end component;
 
 begin
 
-USR: SerialReceiver port map(
+USR: SerialReceiver port map(		--Instanciaçao do Serial Receiver
 	  SDX => SDX,
 	  SCLK => SCLK,
 	  SS => SS,

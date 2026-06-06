@@ -1,63 +1,63 @@
+---------------------------------------------------------------------------------------------
+-- Register 4 bits (Key transmitter)
+---------------------------------------------------------------------------------------------
+
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 
 ENTITY RegKT IS
 	PORT (
-		F : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
-		CE, RESET : IN STD_LOGIC;
-		CLK : IN STD_LOGIC;
-		Q : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
-	);
+			--Inputs
+		   D: IN STD_LOGIC_VECTOR(3 DOWNTO 0);			--Valor a armazenar
+		   E, RESET: IN STD_LOGIC;							--Enable e RESET
+		   CLK: IN STD_LOGIC;								--Relogio da FPGA
+			
+			--Outputs
+		   Q: OUT STD_LOGIC_VECTOR(3 DOWNTO 0)			--Valor armazenado
+);
 END RegKT;
 
 ARCHITECTURE arch_reg OF RegKT IS
-
-	COMPONENT FlipFlop
-		PORT (
-			CLK, D, EN, SET, RESET : IN STD_LOGIC;
-			Q : OUT STD_LOGIC
-		);
-	END COMPONENT;
+--Registo 1 bit
+COMPONENT FlipFlop
+		PORT(
+			  CLK : IN STD_LOGIC;
+			  RESET : IN STD_LOGIC;
+			  D : IN STD_LOGIC;
+			  SET : IN std_logic;
+			  EN : IN STD_LOGIC;
+			  Q : OUT STD_LOGIC
+);
+END COMPONENT;
 
 BEGIN
-	u_FFD0 : FlipFlop
-	PORT MAP(
-		D => F(0),
-		EN => CE,
+FF1: FlipFlop PORT MAP(		--Instanciaçao do FlipFlop1
+		D => D(0),
+		EN => E,
 		CLK => CLK,
 		Q => Q(0),
 		SET => '0',
-		RESET => RESET
-	);
-
-	u_FFD1 : FlipFlop
-	PORT MAP(
-		D => F(1),
-		EN => CE,
+		RESET => RESET);
+FF2: FlipFlop PORT MAP(		--Instanciaçao do FlipFlop2
+		D => D(1),
+		EN => E,
 		CLK => CLK,
 		Q => Q(1),
 		SET => '0',
-		RESET => RESET
-	);
-
-	u_FFD2 : FlipFlop
-	PORT MAP(
-		D => F(2),
-		EN => CE,
+		RESET => RESET);
+FF3: FlipFlop PORT MAP(		--Instanciaçao do FlipFlop3
+		D => D(2),
+		EN => E,
 		CLK => CLK,
 		Q => Q(2),
 		SET => '0',
-		RESET => RESET
-	);
-
-	u_FFD3 : FlipFlop
-	PORT MAP(
-		D => F(3),
-		EN => CE,
+		RESET => RESET);
+FF4: FlipFlop PORT MAP(		--Instanciaçao do FlipFlop4
+		D => D(3),
+		EN => E,
 		CLK => CLK,
 		Q => Q(3),
 		SET => '0',
-		RESET => RESET
-	);
+		RESET => RESET);
 
 END arch_reg;

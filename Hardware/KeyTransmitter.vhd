@@ -1,116 +1,105 @@
+---------------------------------------------------------------------------------------------
+-- Key Transmitter
+---------------------------------------------------------------------------------------------
+
 LIBRARY ieee;
 USE ieee.STD_LOGIC_1164.ALL;
 
-ENTITY KeyTransmitter IS
-    PORT (
-        clk: IN STD_LOGIC;
-        Load: IN STD_LOGIC;                  
-        D: IN STD_LOGIC_VECTOR(3 DOWNTO 0);  
-        TX_clk: IN STD_LOGIC;                
-        RESET : IN STD_LOGIC;
-        KBfree: OUT STD_LOGIC;               
-        TX_D: OUT STD_LOGIC                  
-    );
-END KeyTransmitter;
+entity KeyTransmitter is
+    port (
+			 --Inputs
+          CLK: in STD_LOGIC;								--Relogio da FPGA
+          Load: in STD_LOGIC;                  		--Sinal para carregar keyCode
+          D: in STD_LOGIC_VECTOR(3 downto 0);  		--Key code
+          TXclk: in STD_LOGIC;         				--Relogio de transmissao       
+          RESET : in STD_LOGIC;							--Clear da maquina
+			 
+			 --Outputs
+          KBfree: out STD_LOGIC;             		--Livre para receber keycode  
+          TXd: out STD_LOGIC                  		--Bit de transmissao da data
+);
+end KeyTransmitter;
 
-ARCHITECTURE arch_KT OF KeyTransmitter IS
-    COMPONENT KTC
-        PORT(
-            Load : IN STD_LOGIC;
-            Tcount : IN STD_LOGIC;
-            clk : IN STD_LOGIC;
-            reset : IN STD_LOGIC;
-            KBfree : OUT STD_LOGIC;
-            Ereg : OUT STD_LOGIC;
-            Ecounter : OUT STD_LOGIC;
-            Rcounter : OUT STD_LOGIC
-        );
-    END COMPONENT;
-    COMPONENT Counter3 
-        PORT(
-            CE, CLK, RESET: IN STD_LOGIC;
-            TC: OUT STD_LOGIC;
-            Q : OUT STD_LOGIC_VECTOR(2 downto 0)
-        );
-    END COMPONENT;
-        
-    COMPONENT RegKT
-        PORT(
-            F : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
-            CE, RESET : IN STD_LOGIC;
-            CLK : IN STD_LOGIC;
-            Q : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
-        );
-    END COMPONENT;
+architecture arch_KT of KeyTransmitter is
+--Maquina de estados do key transmitter
+component KTC
+    port(
+         Load : in STD_LOGIC;
+         Tcount : in STD_LOGIC;
+         clk : in STD_LOGIC;
+         reset : in STD_LOGIC;
+         KBfree : out STD_LOGIC;
+         Ereg : out STD_LOGIC;
+         Ecounter : out STD_LOGIC;
+         Rcounter : out STD_LOGIC);
+end component;
+--Registo de 3 bits para armazenar contagem
+component CounterRegister3 
+    port(
+         CE, CLK, RESET: in STD_LOGIC;
+         TC: out STD_LOGIC;
+         Q : out STD_LOGIC_VECTOR(2 downto 0));
+end component;
+--Registo de 4 bits para armazenar keycode  
+component RegKT
+    port(
+         D : in STD_LOGIC_VECTOR(3 DOWNTO 0);
+         E, RESET : in STD_LOGIC;
+         CLK : in STD_LOGIC;
+         Q : out STD_LOGIC_VECTOR(3 DOWNTO 0));
+end component;
+--Multiplexer 8:2
+component MUX8 
+    port( 
+         D : in STD_LOGIC_VECTOR(7 downto 0);
+         S : in STD_LOGIC_VECTOR(2 downto 0);
+         Q: out STD_LOGIC);
+end component;
 
-    COMPONENT MUX6 
-        PORT( 
-            D : in STD_LOGIC_VECTOR(7 downto 0);
-            S : in STD_LOGIC_VECTOR(2 downto 0);
-            Q: out STD_LOGIC
-        );
-    END COMPONENT;
-
-    SIGNAL TC_s, Ecounter_s, Rcounter_s, Ereg_s, KBfree_s: STD_LOGIC;
-    SIGNAL Count_s : STD_LOGIC_VECTOR(2 DOWNTO 0);
-    SIGNAL Q_s : STD_LOGIC_VECTOR(3 DOWNTO 0);
-    SIGNAL D_mux : STD_LOGIC_VECTOR(7 DOWNTO 0);
-    SIGNAL Mux_Out_s : STD_LOGIC;
+--Sinais intermedios
+signal TC_s, Ecounter_s, Rcounter_s, Ereg_s, KBfree_s: STD_LOGIC;		
+signal Count_s : STD_LOGIC_VECTOR(2 downto 0);
+signal Q_s : STD_LOGIC_VECTOR(3 downto 0);
+signal D_mux : STD_LOGIC_VECTOR(7 downto 0);
+signal Mux_Out_s : STD_LOGIC;
     
-BEGIN
+begin
 
-    KBfree <= KBfree_s;
+KBfree <= KBfree_s;
+D_mux(0) <= '0';       					--TXd vai a 0 antes do flanco de subida do TXclk 
+D_mux(1) <= '1';        				-- Start bit
+D_mux(2) <= Q_s(0);     				--K0
+D_mux(3) <= Q_s(1);    					--K1
+D_mux(4) <= Q_s(2);     				--K2
+D_mux(5) <= Q_s(3);     				--K3
+D_mux(6) <= '0';        				--Stop bit
+D_mux(7) <= '1';        				--TXd a 1 por padrao
+TXd <= Mux_Out_s when KBfree_s = '0' else '1';
 
-    D_mux(0) <= '0';        
-    D_mux(1) <= '1';        
-    D_mux(2) <= Q_s(0);     
-    D_mux(3) <= Q_s(1);    
-    D_mux(4) <= Q_s(2);     
-    D_mux(5) <= Q_s(3);     
-    D_mux(6) <= '0';        
-    D_mux(7) <= '1';        
-
-    TX_D <= Mux_Out_s WHEN KBfree_s = '0' ELSE '1';
-
-    
-    u_key_transmitter_control : KTC
-        PORT MAP(
-            Load => Load,
-            Tcount => TC_s,
-            clk => clk,
-            reset => reset,
-            KBfree => KBfree_s,
-            Ereg => Ereg_s,
-            Ecounter => Ecounter_s,
-            Rcounter => Rcounter_s
-        );
-
-   
-    u_reg : RegKT
-        PORT MAP(
-            F => D,
-            CE => Ereg_s,
-            RESET => reset,
-            CLK => clk,
-            Q => Q_s
-        );
-
-   
-    u_KT_counter : Counter3
-        PORT MAP(
-            CE => Ecounter_s,
-            CLK => TX_clk,
-            RESET => Rcounter_s,
-            TC => TC_s,
-            Q => Count_s
-        );
-
-   
-    u_KT_mux : MUX6
-        PORT MAP(
-            D => D_mux,
-            S => Count_s,
-            Q => Mux_Out_s
-        );
+UKTC: KTC port map(						--Instanciaçao da maquina de estados
+       Load => Load,
+       Tcount => TC_s,
+       clk => CLK,
+       reset => reset,
+       KBfree => KBfree_s,
+       Ereg => Ereg_s,
+       Ecounter => Ecounter_s,
+       Rcounter => Rcounter_s);
+REG: RegKT port map(						--Instanciaçao do registo
+     D => D,
+     E => Ereg_s,
+     RESET => reset,
+     CLK => CLK,
+     Q => Q_s);
+COUNTER: CounterRegister3 port map(			--Instanciaçao do contador
+         CE => Ecounter_s,
+         CLK => TXclk,
+         RESET => Rcounter_s,
+         TC => TC_s,
+         Q => Count_s);
+MUX: MUX8 port map(						--Instanciaçao do Multiplexer
+     D => D_mux,
+     S => Count_s,
+     Q => Mux_Out_s);
 
 END arch_KT;

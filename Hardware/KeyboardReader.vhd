@@ -1,19 +1,26 @@
+---------------------------------------------------------------------------------------------
+-- Keyboard Reader
+---------------------------------------------------------------------------------------------
+
 library ieee;
 use IEEE.std_logic_1164.all;
 
 entity KeyboardReader is
     port(
-			Rows: in std_logic_vector(3 downto 0);
-			Tdelay: in std_logic_vector(1 downto 0);
-			RESET: in std_logic;
-			Osc: in std_logic;
-			TXclk: in std_logic;
+			--Inputs
+			Rows: in std_logic_vector(3 downto 0);			--Linhas do teclado
+			Tdelay: in std_logic_vector(1 downto 0);		--Intervalo de tempo de repeat
+			RESET: in std_logic;									--Clear da maquina
+			Osc: in std_logic;									--Relogio da FPGA
+			TXclk: in std_logic;									--Relogio de transmissao
 			
-			TXd: out std_logic;
-			Cols: out std_logic_vector(3 downto 0));
+			--Outputs
+			TXd: out std_logic;									--Bit de transmissao da data
+			Cols: out std_logic_vector(3 downto 0));		--Colunas do teclado
 end KeyboardReader;
 
 architecture arch_kbreader of KeyboardReader is
+--Descodificador de teclado
 component KeyDecode is
     port
         (
@@ -27,7 +34,7 @@ component KeyDecode is
 			K: out std_logic_vector(3 downto 0);
 			Kval: out std_logic);
 end component;
-
+--Armazenamento
 component RingBuffer is
     port(
 			CLK: in std_logic;
@@ -40,28 +47,29 @@ component RingBuffer is
 			Dout: out std_logic_vector(3 downto 0);
 			DAC: out std_logic);
 end component;
-
+--Transmissao
 component KeyTransmitter is
     port(
-			clk: in std_logic;
+			CLK: in std_logic;
 			Load: in std_logic;
 			D: in std_logic_vector(3 downto 0);
-			TX_clk: in std_logic;
+			TXclk: in std_logic;
 			RESET: in std_logic;
 			
 			KBfree: out std_logic;
-			TX_D: out std_logic);
+			TXd: out std_logic);
 end component;
 
-signal DAC_out: std_logic;
-signal Kval_out: std_logic;
-signal K_out: std_logic_vector(3 downto 0);
-signal Q_out: std_logic_vector(3 downto 0);
-signal KBfree_out: std_logic;
-signal Wreg_out: std_logic;
+--Sinais intermedios
+signal DAC_out: std_logic;							--Data accepted
+signal Kval_out: std_logic;						--Key valid
+signal K_out: std_logic_vector(3 downto 0);	--Codigo da tecla (Key decode)
+signal Q_out: std_logic_vector(3 downto 0);	--Codigo da tecla (Ring Buffer)
+signal KBfree_out: std_logic;						--KBfree 
+signal Wreg_out: std_logic;						--Wreg
 
 begin
-KD: KeyDecode port map (
+KD: KeyDecode port map (			--Instanciaçao do Descodificador de teclado
 	 Kack => DAC_out,
 	 Rows => Rows,
 	 RESET => RESET,
@@ -71,7 +79,7 @@ KD: KeyDecode port map (
 	 K => K_out,
 	 Kval => Kval_out);
 	 
-RB: RingBuffer port map (
+RB: RingBuffer port map (			--Instanciaçao do bloco de armazenamento
 	 CLK => Osc,
 	 RESET => RESET,
 	 CTS => KBfree_out,
@@ -81,13 +89,13 @@ RB: RingBuffer port map (
 	 Dout => Q_out,
 	 DAC => DAC_out);
 	 
-KT: KeyTransmitter port map (
-	 clk => Osc,
+KT: KeyTransmitter port map (		--Instanciaçao do bloco de transmissao
+	 CLK => Osc,
 	 Load => Wreg_out,
 	 D => Q_out,
-	 TX_clk => TXclk,
+	 TXclk => TXclk,
 	 RESET => RESET,
 	 KBfree => KBfree_out,
-	 TX_D => TXd);
+	 TXd => TXd);
 	 
 end arch_kbreader;

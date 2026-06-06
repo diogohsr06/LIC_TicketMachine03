@@ -1,17 +1,25 @@
+---------------------------------------------------------------------------------------------
+-- Shift Register
+---------------------------------------------------------------------------------------------
+
 library ieee;
 use IEEE.std_logic_1164.all;
 
 entity ShiftRegisterPELCD is
     port
         (
-			SerialIN: in std_logic;
-			SCLK: in std_logic;
-			SS: in std_logic;
-			RESET: in std_logic;
-			Q: out std_logic_vector(9 downto 0));
+			--Inputs
+			SerialIN: in std_logic;							--Informaçao em serie
+			SCLK: in std_logic;								--Relogio
+			SS: in std_logic;									--Enable
+			RESET: in std_logic;								--Reinicia o sistema
+			
+			--Outputs
+			Q: out std_logic_vector(9 downto 0));		--Valor armazenado
 end ShiftRegisterPELCD;
 
 architecture arch_SR of ShiftRegisterPELCD is
+--Registo 1 bit
 component FlipFlop IS
 PORT(	CLK : in std_logic;
 		RESET : in STD_LOGIC;
@@ -21,8 +29,12 @@ PORT(	CLK : in std_logic;
 		Q : out std_logic
 		);
 END component;
+
+--Sinais intermedios
 signal Data: std_logic_vector(9 downto 0);
+
 begin
+--Instanciaçao de FlipFlops
 FF1: FlipFlop port map(
 	  CLK => SCLK,
 	  RESET => RESET,
@@ -30,7 +42,6 @@ FF1: FlipFlop port map(
 	  D => SerialIN,
 	  EN => SS,
 	  Q => Data(9));
-	  
 FF2: FlipFlop port map(
 	  CLK => SCLK,
 	  RESET => RESET,
@@ -38,7 +49,6 @@ FF2: FlipFlop port map(
 	  D => Data(9),
 	  EN => SS,
 	  Q => Data(8));
-	  
 FF3: FlipFlop port map(
 	  CLK => SCLK,
 	  RESET => RESET,
@@ -46,7 +56,6 @@ FF3: FlipFlop port map(
 	  D => Data(8),
 	  EN => SS,
 	  Q => Data(7));
-	  
 FF4: FlipFlop port map(
 	  CLK => SCLK,
 	  RESET => RESET,
@@ -54,7 +63,6 @@ FF4: FlipFlop port map(
 	  D => Data(7),
 	  EN => SS,
 	  Q => Data(6));
-	  
 FF5: FlipFlop port map(
 	  CLK => SCLK,
 	  RESET => RESET,
@@ -62,7 +70,6 @@ FF5: FlipFlop port map(
 	  D => Data(6),
 	  EN => SS,
 	  Q => Data(5));
-	  
 FF6: FlipFlop port map(
 	  CLK => SCLK,
 	  RESET => RESET,
@@ -70,7 +77,6 @@ FF6: FlipFlop port map(
 	  D => Data(5),
 	  EN => SS,
 	  Q => Data(4));
-	  
 FF7: FlipFlop port map(
 	  CLK => SCLK,
 	  RESET => RESET,
@@ -78,7 +84,6 @@ FF7: FlipFlop port map(
 	  D => Data(4),
 	  EN => SS,
 	  Q => Data(3));
-	  
 FF8: FlipFlop port map(
 	  CLK => SCLK,
 	  RESET => RESET,
@@ -86,7 +91,6 @@ FF8: FlipFlop port map(
 	  D => Data(3),
 	  EN => SS,
 	  Q => Data(2));
-	  
 FF9: FlipFlop port map(
 	  CLK => SCLK,
 	  RESET => RESET,
@@ -94,7 +98,6 @@ FF9: FlipFlop port map(
 	  D => Data(2),
 	  EN => SS,
 	  Q => Data(1));
-	  
 FF10: FlipFlop port map(
 	  CLK => SCLK,
 	  RESET => RESET,

@@ -1,22 +1,28 @@
+---------------------------------------------------------------------------------------------
+-- Key Decode
+---------------------------------------------------------------------------------------------
+
 library ieee;
 use IEEE.std_logic_1164.all;
 
 entity KeyDecode is
     port (
-        Kack   : in  std_logic;
-        Tdelay : in  std_logic_vector(1 downto 0);
-        Rows   : in  std_logic_vector(3 downto 0);
-        RESET  : in  std_logic;
-        Osc    : in  std_logic;
+		  --Inputs
+        Kack   : in  std_logic;								--Key Acknoledged (Tecla recebida)
+        Tdelay : in  std_logic_vector(1 downto 0);		--Intervalo de tempo de repeat
+        Rows   : in  std_logic_vector(3 downto 0);		--Linhas do teclado
+        RESET  : in  std_logic;								--Clear da maquina
+        Osc    : in  std_logic;								--Relogio da FPGA
         
-        Cols   : out std_logic_vector(3 downto 0);
-        K      : out std_logic_vector(3 downto 0);
-        Kval   : out std_logic
-    );
+		  --Outputs
+        Cols   : out std_logic_vector(3 downto 0);		--Colunas do teclado
+        K      : out std_logic_vector(3 downto 0);		--Codigo da tecla
+        Kval   : out std_logic								--Key valid (Nova tecla pronta)
+);
 end KeyDecode;
 
 architecture arch_keydecoder of KeyDecode is
-
+--Varrimento do teclado
 component KeyScan is
     port (
         Rows   : in  std_logic_vector(3 downto 0);
@@ -29,36 +35,37 @@ component KeyScan is
         Kpress : out std_logic
     );
 end component;
+--Maquina de estados do Key Decode
 component KeyControl is
     port (
         CLK        : in  std_logic;
         RESET      : in  std_logic;
         Kack       : in  std_logic;
         Kpress     : in  std_logic;
-        Timer_Done : in  std_logic;  
+        TimerDone : in  std_logic;  
         Kval       : out std_logic;
         Kscan      : out std_logic;
-        Timer_Clr  : out std_logic   
+        TimerClr  : out std_logic   
     );
 end component;
-
-   
+--Temporizador de 500ms
 component TDelay_Timer is
     port (
         Osc        : in  std_logic;
-        Timer_Clr  : in  std_logic;
+        TimerClr  : in  std_logic;
         Tdelay     : in  std_logic_vector(1 downto 0);
-        Timer_Done : out std_logic
+        TimerDone : out std_logic
     );
 end component;
 
-signal kscan_out      : std_logic;
-signal kpress_out     : std_logic;
-signal timer_done_sig : std_logic;
-signal timer_clr_sig  : std_logic;
+--Sinais intermedios
+signal kscan_out      : std_logic;		--Kscan
+signal kpress_out     : std_logic;		--KPress
+signal timer_done_sig : std_logic;		--TimerDone
+signal timer_clr_sig  : std_logic;		--TimerClear
 
 begin
-KS: KeyScan port map (
+KS: KeyScan port map (						--Instanciaçao do varrimento do teclado
         Rows => Rows,
         Kscan => kscan_out,
         Osc => Osc,
@@ -66,19 +73,19 @@ KS: KeyScan port map (
         K => K,
         Cols => Cols,
         Kpress => kpress_out);
-KC: KeyControl port map (
+KC: KeyControl port map (					--Intanciaçao da maquina de estados
         CLK => Osc,
         RESET => RESET,
         Kack => Kack,
         Kpress => kpress_out,
-        Timer_Done => timer_done_sig, 
+        TimerDone => timer_done_sig, 
         Kval => Kval,
         Kscan => kscan_out,
-        Timer_Clr => timer_clr_sig);
-TIMER: TDelay_Timer port map (
+        TimerClr => timer_clr_sig);
+TIMER: TDelay_Timer port map (			--Instanciaçao do temporizador
 		  Osc => Osc,
-        Timer_Clr => timer_clr_sig,  
+        TimerClr => timer_clr_sig,  
         Tdelay => Tdelay,         
-        Timer_Done => timer_done_sig);
+        TimerDone => timer_done_sig);
 
 end arch_keydecoder;
