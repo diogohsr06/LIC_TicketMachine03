@@ -14,7 +14,7 @@ object TicketMachineApp {
     private const val WAIT_KEY_MS = 2000L
 
     /**
-     * Function: maintenanceMode()
+     * Function: maintenanceMode()hu
      *
      * Description: Maintenance mode of the application
      * @param void
