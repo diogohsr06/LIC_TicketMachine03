@@ -5,11 +5,24 @@ import isel.leic.utils.Time
 //======================================================================================================================
 object Stations {
     var stations = arrayOf<FileAccess.Stations>()
-    /**Inits the object**/
+    /**
+     * Function: init()
+     *
+     * Description: This functions inits the object
+     * @param void
+     * @return void
+     * @see FileAccess.readStations
+     */
     fun init() {
         stations = FileAccess.readStations("stations.txt")
     }
-    /**Increments sold whenever a ticket is sold**/
+    /**
+     * Function: sold()
+     *
+     * Description: Increments sold whenever a ticket is sold
+     * @param station Destination
+     * @return void
+     */
     fun sold(station: String) {
         for (i in stations) {
             if (i.station == station) {
@@ -17,11 +30,24 @@ object Stations {
             }
         }
     }
-    /**Saves on file**/
+    /**
+     * Function: save()
+     *
+     * Description: Saves on file
+     * @param void
+     * @return void
+     * @see FileAccess.writeStations
+     */
     fun save() {
         FileAccess.writeStations("stations.txt", stations)
     }
-    /**Resets counters**/
+    /**
+     * Function: reset()
+     *
+     * Description: Resets counters
+     * @param void
+     * @return void
+     */
     fun reset() {
         for (i in stations) {
             i.sold = 0
@@ -34,8 +60,12 @@ object Stations {
 //======================================================================================================================
 fun main() {
     Stations.init()
-    println("■ Initializing...")
-    Time.sleep(3000)
+    print("■ Initializing⬝")
+    Time.sleep(1000)
+    print("⬝")
+    Time.sleep(1000)
+    print("⬝\n")
+    Time.sleep(1000)
     println("=============================================================================")
     println("■ Avalable Stations:")
     Stations.stations.forEach { println("- ${it.station} (Price: ${it.price})") }

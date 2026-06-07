@@ -1,4 +1,4 @@
-225;0;Star Wars
+225;1;Star Wars
 200;0;GOT
 175;0;Adventure Time
 150;0;LOTR

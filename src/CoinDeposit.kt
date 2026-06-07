@@ -7,11 +7,24 @@ object CoinDeposit {
     private var deposited = 0
     private var coins = arrayOf<FileAccess.Coins>()
     private var currCoins = IntArray(6)
-    /**Inits the object**/
+    /**
+     * Function: init()
+     *
+     * Description: This functions inits the object
+     * @param void
+     * @return void
+     * @see FileAccess.readCoins
+     */
     fun init() {
         coins = FileAccess.readCoins("CoinDeposit.txt")
     }
-    /**Inserts coin on deposit**/
+    /**
+     * Function: insert()
+     *
+     * Description: Inserts coin on deposit
+     * @param id Coin identification
+     * @return void
+     */
     fun insert(id: Int) {
         val value = when (id) {
             0 -> 5
@@ -26,9 +39,14 @@ object CoinDeposit {
             deposited += value
             currCoins[id]++
         }
-
     }
-    /**Aborts & returns coins**/
+    /**
+     * Function: exchange()
+     *
+     * Description: Aborts & returns coins
+     * @param value Value to be exchanged
+     * @return Boolean - Mainly to check if deposit has enough to exchange
+     */
     fun exchange(value: Int): Boolean {
         if (deposited < value) return false
         for (i in currCoins.indices) {
@@ -38,22 +56,52 @@ object CoinDeposit {
         deposited = 0
         return true
     }
-    /**Aborts & returns**/
+    /**
+     * Function: cancel()
+     *
+     * Description: Aborts & returns
+     * @param void
+     * @return void
+     */
     fun cancel() {
         deposited = 0
         currCoins = IntArray(6)
     }
-    /**Returns total deposited**/
+    /**
+     * Function: getTotal()
+     *
+     * Description: Returns total deposited
+     * @param void
+     * @return deposited - Value on the deposit
+     */
     fun getTotal() = deposited
-    /**Returns coin amount**/
+    /**
+     * Function: getCount()
+     *
+     * Description: Returns coin amount
+     * @param id Coin identification
+     * @return coins[id].amount - Amount of the coin type
+     */
     fun getCount(id: Int) = coins[id].amount
-    /**Resets counters**/
+    /**
+     * Function: resetCnt()
+     *
+     * Description: Resets counters
+     * @param void
+     * @return void
+     */
     fun resetCnt() {
         for (i in coins.indices) {
             coins[i].amount = 0
         }
     }
-    /**Saves coins**/
+    /**
+     * Function: saveCoins()
+     *
+     * Description: Saves coins
+     * @param void
+     * @return void
+     */
     fun saveCoins() {
         FileAccess.writeCoins("CoinDeposit.txt", coins)
     }
@@ -64,8 +112,12 @@ object CoinDeposit {
 //======================================================================================================================
 fun main() {
     CoinDeposit.init()
-    println("■ Initializing...")
-    Time.sleep(3000)
+    print("■ Initializing⬝")
+    Time.sleep(1000)
+    print("⬝")
+    Time.sleep(1000)
+    print("⬝\n")
+    Time.sleep(1000)
     println("=============================================================================")
     println("■ Available Coins (IDs): 0:5c,\n1:10c,\n2:20c,\n3:50c,\n4:1€,\n5:2€")
     println("===========================================")

@@ -4,12 +4,29 @@ import isel.leic.utils.Time
 //                                                      Key Receiver
 //======================================================================================================================
 object KeyReceiver {
-    /**Inits the object**/
+    /**
+     * Function: init()
+     *
+     * Description: This functions inits the object
+     * @param void
+     * @return void
+     * @see HAL.init
+     * @see HAL.clrBits
+     */
     fun init() {
         HAL.init()
         HAL.clrBits(OUTPUTPORTS.TXclk.mask)
     }
-    /**Builds the frame as data is received serially. Detects protocol errors and isolates the KeyCode **/
+    /**
+     * Function: serialReceiver()
+     *
+     * Description: Builds the frame as data is received serially.
+     * Detects protocol errors and isolates the KeyCode.
+     * @param void
+     * @return Key Code or -1
+     * @see HAL.isBit
+     * @see HAL.clrBits
+     */
     fun serialReceiver(): Int {
         if (HAL.isBit(INPUTPORTS.TXD.mask)) return -1
         var frame = 0
@@ -37,8 +54,12 @@ fun main() {
     TUI.init()
     println("■ Make sure to not spam keys, ring buffer will store them all")
     println("■ Insert sleep functions on serial receiver to see the protocol work")
-    println("■ Initializing...")
-    Time.sleep(3000)
+    print("■ Initializing⬝")
+    Time.sleep(1000)
+    print("⬝")
+    Time.sleep(1000)
+    print("⬝\n")
+    Time.sleep(1000)
     println("=============================================================================")
     while (true) {
         Time.sleep(2000)

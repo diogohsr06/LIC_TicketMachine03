@@ -10,15 +10,36 @@ object FileAccess {
     /**Data structures**/
     data class Stations(val price: Int, var sold: Int, val station: String)
     data class Coins(val value: Int, var amount: Int)
-    /**Creates a file reader**/
+    /**
+     * Function: createReader()
+     *
+     * Description: Creates a file reader
+     * @param fileName Name of the file to read
+     * @return BufferedReader(FileReader(fileName))
+     * @see BufferedReader
+     */
     private fun createReader(fileName: String): BufferedReader {
         return BufferedReader(FileReader(fileName))
     }
-    /**Creates a file writer**/
+    /**
+     * Function: createWriter()
+     *
+     * Description: Creates a file writer
+     * @param fileName Name of the file to read
+     * @return PrintWriter(fileName)
+     * @see PrintWriter
+     */
     private fun createWriter(fileName: String): PrintWriter {
         return PrintWriter(fileName)
     }
-    /**Converts string to Stations**/
+    /**
+     * Function: toStations()
+     *
+     * Description: Converts a text line into a Stations object
+     * @param line Text line in the format "price;sold;station"
+     * @return Stations object
+     * @see Stations
+     */
     fun toStations(line: String): Stations {
         val parts = line.split(";")
         return Stations(
@@ -27,7 +48,14 @@ object FileAccess {
             parts[2]
         )
     }
-    /**Converts string to Coins**/
+    /**
+     * Function: toCoins()
+     *
+     * Description: Converts a text line into a Coins object
+     * @param line Text line in the format "value;amount"
+     * @return Coins object
+     * @see Coins
+     */
     fun toCoins(line: String): Coins {
         val parts = line.split(";")
         return Coins(
@@ -35,7 +63,14 @@ object FileAccess {
             parts[1].toInt()
         )
     }
-    /**Extracts file content, splits and converts to Array (Stations)**/
+    /**
+     * Function: readStations()
+     *
+     * Description: Reads all stations from a file and stores them in an array
+     * @param fileName Name of the file to read
+     * @return Array of Stations
+     * @see Stations
+     */
     fun readStations(fileName: String): Array<Stations> {
         val readFile = createReader(fileName)
         var line = readFile.readLine()
@@ -46,7 +81,14 @@ object FileAccess {
         }
         return stations.toTypedArray()
     }
-    /**Extracts file content, splits and converts to Array (Coins)**/
+    /**
+     * Function: readCoins()
+     *
+     * Description: Reads all coins from a file and stores them in an array
+     * @param fileName Name of the file to read
+     * @return Array of Coins
+     * @see Coins
+     */
     fun readCoins(fileName: String): Array<Coins> {
         val readFile = createReader(fileName)
         var line = readFile.readLine()
@@ -57,7 +99,15 @@ object FileAccess {
         }
         return coins.toTypedArray()
     }
-    /**Converts back and writes on the file (Stations)**/
+    /**
+     * Function: writeStations()
+     *
+     * Description: Writes an array of stations to a file
+     * @param fileName Name of the file to write
+     * @param stations Array of Stations to be written
+     * @return void
+     * @see Stations
+     */
     fun writeStations(fileName: String, stations: Array<Stations>) {
         val writeFile = createWriter(fileName)
         for (i in stations) {
@@ -65,7 +115,15 @@ object FileAccess {
         }
         writeFile.close()
     }
-    /**Converts back and writes on the file (Coins)**/
+    /**
+     * Function: writeCoins()
+     *
+     * Description: Writes an array of coins to a file
+     * @param fileName Name of the file to write
+     * @param coins Array of Coins to be written
+     * @return void
+     * @see Coins
+     */
     fun writeCoins(fileName: String, coins: Array<Coins>) {
         val writeFile = createWriter(fileName)
         for (i in coins) {
@@ -80,8 +138,12 @@ object FileAccess {
 //======================================================================================================================
 fun main() {
     println("■ File Writer & File Reader")
-    println("■ Initializing...")
-    Time.sleep(3000)
+    print("■ Initializing⬝")
+    Time.sleep(1000)
+    print("⬝")
+    Time.sleep(1000)
+    print("⬝\n")
+    Time.sleep(1000)
     println("=============================================================================")
     while (true) {
         println("■ Choose a task: ")

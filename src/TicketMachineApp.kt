@@ -5,10 +5,21 @@ import kotlin.system.exitProcess
 //                                                 TICKET MACHINE
 //======================================================================================================================
 object TicketMachineApp {
+    /**
+     * Origin station (protected)
+     *
+     * Key timeout (protected)
+     */
     private const val ORIGIN_STATION = 0
     private const val WAIT_KEY_MS = 2000L
 
-    /**Maintenance mode**/
+    /**
+     * Function: maintenanceMode()
+     *
+     * Description: Maintenance mode of the application
+     * @param void
+     * @return void
+     */
     private fun maintenanceMode() {
         val options = listOf(
             "#-Print Ticket",
@@ -18,7 +29,23 @@ object TicketMachineApp {
             "D-Shutdown"
         )
         var optIdx = 0
-
+        /**
+         * Function: printTicket_M()
+         *
+         * Description: Simulates ticket printing
+         * @param void
+         * @return void
+         * @see KBD.waitKey
+         * @see TUI.printTicket
+         * @see M.enabled
+         * @see TUI.toPrint
+         * @see TUI.processing
+         * @see TicketDispenser.lowerPrt
+         * @see TicketDispenser.activatePrintingTicket
+         * @see TUI.collectFinished
+         * @see TUI.collectTicket
+         * @see TUI.vendingAborted
+         */
         fun printTicket_M() {
             var idx = 0
             var roundTrip = true
@@ -36,7 +63,7 @@ object TicketMachineApp {
                         TUI.toPrint(st.station, !roundTrip) 
                         if (KBD.waitKey(7000L) != '*') {
                             TUI.vendingAborted()
-                            Thread.sleep(1200)
+                            Time.sleep(1200)
                             continue
                         }
                         TUI.processing(st.station)
@@ -44,12 +71,12 @@ object TicketMachineApp {
                         TicketDispenser.activatePrintingTicket(roundTrip, ORIGIN_STATION, idx)
                         TUI.collectTicket(st.station)
                         while (!HAL.isBit(INPUTPORTS.FN.mask)) {
-                            Thread.sleep(10)
+                            Time.sleep(10)
                         }
                         TicketDispenser.lowerPrt(roundTrip, ORIGIN_STATION, idx)
-                        Thread.sleep(200)
+                        Time.sleep(200)
                         TUI.collectFinished()
-                        Thread.sleep(1500)
+                        Time.sleep(1500)
                         return
                     }
                     '#' -> {
@@ -65,6 +92,16 @@ object TicketMachineApp {
                 }
             }
         }
+        /**
+         * Function: stationCnt()
+         *
+         * Description: Displays counters for stations
+         * @param void
+         * @return void
+         * @see KBD.waitKey
+         * @see M.enabled
+         * @see TUI.stationCount
+         */
         fun stationCnt() {
             var idx = 0
             val stations = Stations.stations
@@ -83,6 +120,17 @@ object TicketMachineApp {
                 }
             }
         }
+        /**
+         * Function: coinsCnt()
+         *
+         * Description: Display counters for coins
+         * @param void
+         * @return void
+         * @see KBD.waitKey
+         * @see TUI.printCoins
+         * @see M.enabled
+         * @see CoinDeposit.getCount
+         */
         fun coinsCnt() {
             val values = intArrayOf(5, 10, 20, 50, 100, 200)
             var idx = 0
@@ -100,6 +148,17 @@ object TicketMachineApp {
                 }
             }
         }
+        /**
+         * Function: resetCounters()
+         *
+         * Description: Resets counters
+         * @param void
+         * @return void
+         * @see TUI.yesOrNo
+         * @see TUI.write
+         * @see Stations.reset
+         * @see CoinDeposit.resetCnt
+         */
         fun resetCounters() {
             if (TUI.yesOrNo("Reset Counters?", 7000)) {
                 TUI.write("Resetting...", 0, 0, true, true)
@@ -110,6 +169,16 @@ object TicketMachineApp {
                 Time.sleep(5000)
             }
         }
+        /**
+         * Function: shutdown()
+         *
+         * Description: Saves everything and closes process
+         * @param void
+         * @return void
+         * @see Stations.save
+         * @see CoinDeposit.saveCoins
+         * @see TUI.write
+         */
         fun shutDown() {
             Stations.save()
             CoinDeposit.saveCoins()
@@ -129,10 +198,27 @@ object TicketMachineApp {
             }
         }
     }
-    /**Vending mode**/
+    /**
+     * Function: normalMode()
+     *
+     * Description: Vending mode of the application
+     * @param void
+     * @return void
+     */
     private fun normalMode() {
         val stations = Stations.stations
         if (stations.isEmpty()) return
+        /**
+         * Function: pollCoin()
+         *
+         * Description: Manages the hardware (Coin acceptor) and processes acceptance of new coins.
+         * Updates the deposit
+         * @param void
+         * @return void
+         * @see CoinAcceptor.coinInserted
+         * @see CoinAcceptor.coinAccept
+         * @see CoinDeposit.insert
+         */
         fun pollCoin() {
             if (!CoinAcceptor.coinInserted()) return
             val id = CoinAcceptor.getCoinId()
@@ -141,6 +227,19 @@ object TicketMachineApp {
             }
             CoinAcceptor.coinAccept()
         }
+        /**
+         * Function: abortVending()
+         *
+         * Description: Cancels the current transaction. Returns inserted coins.
+         * Updates the deposit
+         * @param void
+         * @return void
+         * @see CoinAcceptor.coinReturn
+         * @see CoinDeposit.cancel
+         * @see CoinDeposit.getTotal
+         * @see TUI.vendingAborted
+         * @see TUI.vendingAborted2
+         */
         fun abortVending() {
             val returned = CoinDeposit.getTotal()
             if (returned > 0) {
@@ -152,6 +251,20 @@ object TicketMachineApp {
             }
             Time.sleep(1200)
         }
+        /**
+         * Function: waitForPayment()
+         *
+         * Description: Waits for the insertion of the value by the user
+         * @param station Destination
+         * @param required Price
+         * @return Boolean
+         * @see Others.centsToEuros
+         * @see TUI.write
+         * @see pollCoin
+         * @see M.enabled
+         * @see CoinDeposit.getTotal
+         * @see KBD.waitKey
+         */
         fun waitForPayment(station: String, required: Int): Boolean {
             while (!M.enabled()) {
                 pollCoin()
@@ -221,7 +334,19 @@ object TicketMachineApp {
             }
         }
     }
-    /**Inits the object**/
+    /**
+     * Function: init()
+     *
+     * Description: This functions inits the object
+     * @param void
+     * @return void
+     * @see M.init
+     * @see CoinDeposit.init
+     * @see CoinAcceptor.init
+     * @see TicketDispenser.init
+     * @see TUI.init
+     * @see Stations.init
+     */
     fun init() {
         M.init()
         CoinAcceptor.init()
@@ -230,7 +355,18 @@ object TicketMachineApp {
         CoinDeposit.init()
         Stations.init()
     }
-    /**Main program**/
+    /**
+     * Function: Program()
+     *
+     * Description: The core of the APP
+     * @param void
+     * @return void
+     * @see TUI.startMenu
+     * @see M.enabled
+     * @see maintenanceMode
+     * @see normalMode
+     * @see KBD.waitKey
+     */
     fun program() {
         while (true) {
             TUI.startMenu()
@@ -245,6 +381,12 @@ object TicketMachineApp {
 //======================================================================================================================
 fun main() {
     TicketMachineApp.init()
+    print("■ Initializing⬝")
+    Time.sleep(1000)
+    print("⬝")
+    Time.sleep(1000)
+    print("⬝\n")
+    Time.sleep(1000)
     println("=======================Navigation in Vending Mode=======================")
     println("# -> Enter vending mode")
 

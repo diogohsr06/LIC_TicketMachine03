@@ -1,16 +1,34 @@
+import isel.leic.UsbPort
 import isel.leic.utils.Time
 
 //======================================================================================================================
 //                                                      Keyboard
 //======================================================================================================================
 object KBD {
+    /**NONE refers to invalid key.
+     *
+     * none converts to a null character (\u0000), since 0 is a valid key code.**/
     const val NONE = 0;
     val none = NONE.toChar()
-    /**Inicia a classe**/
+    /**
+     * Function: init()
+     *
+     * Description: This functions inits the object
+     * @param void
+     * @return void
+     * @see KeyReceiver.init
+     */
     fun init() {
         KeyReceiver.init()
     }
-    /**Retorna de imediato a tecla premida ou NONE se não há tecla premida**/
+    /**
+     * Function: getKey()
+     *
+     * Description: Instantly decodes and gives corresponding char.
+     * @param void
+     * @return keyConvert. This returns the corresponding char of the key code.
+     * @see KeyReceiver.serialReceiver
+     */
     fun getKey(): Char {
         val keyCode = KeyReceiver.serialReceiver()
         val keyConvert =
@@ -35,7 +53,16 @@ object KBD {
             }
         return keyConvert
     }
-    /**Retorna a tecla premida, caso ocorra antes de 'timeout' (em milissegundos), ou NONE caso contrário**/
+    /**
+     * Function: waitKey()
+     *
+     * Description: Returns key if pressed before timeout,
+     * otherwise returns none.
+     * @param timeout Refers to duration, in milliseconds, of a key detection.
+     * @return Key or none.
+     * @see KBD.getKey
+     * @see System.currentTimeMillis
+     */
     fun waitKey(timeout: Long): Char {
         val start = System.currentTimeMillis()
         while (System.currentTimeMillis() - start < timeout) {
@@ -54,8 +81,12 @@ fun main() {
     KBD.init()
     println("■ To test Ring buffer: Turn software off and press keys")
     println("■ Test different repeat intervals with Switches 5 & 6")
-    println("■ Initializing...")
-    Time.sleep(3000)
+    print("■ Initializing⬝")
+    Time.sleep(1000)
+    print("⬝")
+    Time.sleep(1000)
+    print("⬝\n")
+    Time.sleep(1000)
     println("=============================================================================")
     print("Keys pressed: ")
     while(true) {

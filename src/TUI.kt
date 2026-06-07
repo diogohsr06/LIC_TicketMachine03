@@ -7,12 +7,31 @@ import java.text.SimpleDateFormat
 //======================================================================================================================
 object TUI {
     private val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm")
-    /**Calculates the centered column**/
+    /**
+     * Protected Function: center()
+     *
+     * Description: Calculates the starting column required to center a text on the LCD
+     * @param text Text to be centered
+     * @return Starting column position
+     */
     private fun center(text: String): Int {
         val getCol = (LCD.COLS - text.length) / 2
         return if (getCol < 0) 0 else getCol
     }
-    /**Improved LCD writing function, able to center, clear, set cursor and fix display bounds in one call**/
+    /**
+     * Function: write()
+     *
+     * Description: Improved writing function. Writes text to the LCD with optional centering and clearing
+     * @param text Text to be displayed
+     * @param lin LCD line position
+     * @param col LCD column position
+     * @param center Enables text centering
+     * @param clear Clears the LCD before writing
+     * @return void
+     * @see LCD.clear
+     * @see LCD.cursor
+     * @see LCD.write
+     */
     fun write(text: String, lin: Int, col: Int, center: Boolean, clear: Boolean) {
         if (clear) LCD.clear()
         if (text.length <= LCD.COLS) {
@@ -31,82 +50,187 @@ object TUI {
             LCD.write(line1Text)
         }
     }
-    /**Inits the object**/
+    /**
+     * Function: init()
+     *
+     * Description: Initializes the LCD and Keyboard modules
+     * @param void
+     * @return void
+     * @see LCD
+     * @see KBD
+     */
     fun init() {
         LCD.init()
         KBD.init()
     }
-    /**Home screen**/
+    /**
+     * Function: startMenu()
+     *
+     * Description: Displays the system home screen with current date and time
+     * @param void
+     * @return void
+     * @see SimpleDateFormat
+     */
     fun startMenu() {
         write("Ticket to Ride", 0, 0, true, true)
         val dateStr = dateFormatter.format(Date())
         write(dateStr, 1, 0, true, false)
     }
-    /**Maintenance screen**/
+    /**
+     * Function: maintenanceScreen()
+     *
+     * Description: Displays the maintenance screen with the selected option
+     * @param option Maintenance option to display
+     * @return void
+     */
     fun maintenanceScreen(option: String) {
         write("Maintenance", 0, 0, true, true)
         write(option, 1, 0, true, false)
     }
-    /**Writes the key pressed**/
+    /**
+     * Function: writeKeyOnLCD()
+     *
+     * Description: Writes a pressed key to the LCD
+     * @param key Character to display
+     * @return void
+     * @see LCD.write
+     */
     fun writeKeyOnLCD(key: Char) {
         LCD.write(key.toString())
     }
-    /**Yes or No screen**/
+    /**
+     * Function: yesOrNo()
+     *
+     * Description: Displays a confirmation screen and waits for user input
+     * @param text Question to display
+     * @param time Timeout in milliseconds
+     * @return True if '*' is pressed, false otherwise
+     * @see KBD.waitKey
+     */
     fun yesOrNo(text: String, time: Long): Boolean {
         write(text, 0, 0, true, true)
         write("*-Yes   other-No", 1, 0, true, false)
         return KBD.waitKey(time) == '*'
     }
-    /**Vending aborted**/
+    /**
+     * Function: vendingAborted()
+     *
+     * Description: Displays a vending aborted message
+     * @param void
+     * @return void
+     */
     fun vendingAborted() {
         write("Vending Aborted.", 0, 0, true, true)
     }
-    /**Vending aborted with returned value**/
+    /**
+     * Function: vendingAborted2()
+     *
+     * Description: Displays a vending aborted message and returned amount
+     * @param price Amount returned to the user
+     * @return void
+     */
     fun vendingAborted2(price: Double) {
         write("Vending Aborted.", 0, 0, true, true)
         write("Returned ${"%.2f".format(price)}${0.toChar()}", 1, 0, true, false)
     }
-    /**Collect ticket screen**/
+    /**
+     * Function: collectTicket()
+     *
+     * Description: Displays ticket collection instruction
+     * @param station Destination station name
+     * @return void
+     */
     fun collectTicket(station: String) {
         write(station, 0, 0, true, true)
         write("Collect Ticket", 1, 0, true, false)
     }
-    /**Post ticket collection screen**/
+    /**
+     * Function: collectFinished()
+     *
+     * Description: Displays a thank-you message after ticket collection
+     * @param void
+     * @return void
+     */
     fun collectFinished() {
         write("Thank You!", 0, 0, true, true)
         write("Have a nice trip", 1, 0, true, false)
     }
-    /**Station to print screen**/
+    /**
+     * Function: toPrint()
+     *
+     * Description: Displays ticket printing confirmation screen
+     * @param station Destination station name
+     * @param rt Indicates if the ticket is round trip
+     * @return void
+     */
     fun toPrint(station: String, rt: Boolean) {
         write(station, 0, 0, true, true)
         if (rt) write("${1.toChar()} *- to Print", 1, 0, true, false)
         if (!rt) write("${1.toChar()}${2.toChar()} *- to Print", 1, 0, true, false)
     }
-    /**Station selection screen**/
+    /**
+     * Function: printTicket()
+     *
+     * Description: Displays ticket information before printing
+     * @param station Destination station name
+     * @param keyCode Station selection code
+     * @param price Ticket price
+     * @return void
+     */
     fun printTicket(station: String, keyCode: Int, price: Double) {
         write(station, 0, 0, true, true)
         write("${"%02d".format(keyCode)}${1.toChar()}${2.toChar()}       ${"%.2f".format(price)}${0.toChar()}"
             , 1, 0, true, false)
     }
-    /**Station selection screen with roundtrip**/
+    /**
+     * Function: printTicket2()
+     *
+     * Description: Displays ticket information including round-trip calculation
+     * @param station Destination station name
+     * @param rt Indicates if the ticket is round trip
+     * @param price Base ticket price
+     * @return void
+     */
     fun printTicket2(station: String, rt: Boolean, price: Double) {
         val price2 = price * if (rt) 2 else 1
         write(station, 0, 0, true, true)
         if (rt) write("${1.toChar()}${2.toChar()}         ${"%.2f".format(price2)}${0.toChar()}", 1, 0, false, false)
         if (!rt) write("${1.toChar()}          ${"%.2f".format(price2)}${0.toChar()}", 1, 0, false, false)
     }
-    /**Processing screen**/
+    /**
+     * Function: processing()
+     *
+     * Description: Displays a processing message
+     * @param station Destination station name
+     * @return void
+     */
     fun processing(station: String) {
         write(station, 0, 0, true, true)
         write("Processing ...", 1, 0, true, false)
     }
-    /**Coins Count (Maintenance)**/
+    /**
+     * Function: printCoins()
+     *
+     * Description: Displays coin information in maintenance mode
+     * @param value Coin value
+     * @param amount Number of available coins
+     * @param code Coin identifier code
+     * @return void
+     */
     fun printCoins(value: Double, amount: Int, code: Int) {
         write("${"%.2f".format(value)}${0.toChar()}", 0, 0, true, true)
         write("${"%02d".format(code)}${1.toChar()}${2.toChar()}           $amount",
             1, 0, false, false)
     }
-    /**Station Count screen (Maintenance)**/
+    /**
+     * Function: stationCount()
+     *
+     * Description: Displays station ticket sales information
+     * @param station Station name
+     * @param idx Station identifier code
+     * @param count Number of tickets sold
+     * @return void
+     */
     fun stationCount(station: String, idx: Int, count: Int) {
         write(station, 0, 0, true, true)
         write("${"%02d".format(idx)}${1.toChar()}${2.toChar()}           $count"
@@ -121,8 +245,12 @@ fun main() {
     TUI.init()
     println("■ Select to skip to desired test")
     println("■ Keyboard Test -> 0\n■ Y/N Test -> 1\n■ Interfaces -> 2")
-    println("■ Initializing...")
-    Time.sleep(3000)
+    print("■ Initializing⬝")
+    Time.sleep(1000)
+    print("⬝")
+    Time.sleep(1000)
+    print("⬝\n")
+    Time.sleep(1000)
     println("=============================================================================")
     while (true) {
         TUI.startMenu()

@@ -5,17 +5,34 @@ import isel.leic.utils.Time
 //======================================================================================================================
 object SerialEmitter {
     enum class Peripherial {LCD, TICKET}
-    /**Inicia a classe**/
+    /**
+     * Function: init()
+     *
+     * Description: This functions inits the object
+     * @param void
+     * @return void
+     * @see HAL.init
+     * @see HAL.setBits
+     * @see HAL.clrBits
+     */
     fun init() {
         HAL.init() //port a 0
         HAL.setBits(OUTPUTPORTS.SS_LCD.mask)
         HAL.setBits(OUTPUTPORTS.SS_TD.mask)
         HAL.clrBits(OUTPUTPORTS.SCLK.mask)
     }
-    /**Envia tramas para os diferentes módulos SerialReceiver
-    Identificando o periférico de destino em 'addr'
-    os bits de dados em 'data'
-    e em 'size' o número de bits a enviar **/
+    /**
+     * Function: send()
+     *
+     * Description: This functions sends frames of 10 bits of data to a
+     * specified peripheral
+     * @param addr Peripheral of interest
+     * @param data Data to be sent
+     * @return void
+     * @see OUTPUTPORTS
+     * @see HAL.setBits
+     * @see HAL.clrBits
+     */
     fun send(addr: Peripherial, data: Int) {
         val SS = if (addr == Peripherial.LCD) OUTPUTPORTS.SS_LCD.mask else OUTPUTPORTS.SS_TD.mask
         HAL.clrBits(SS)
@@ -37,8 +54,12 @@ fun main() {
     SerialEmitter.init()
     println("■ Write the data you want to be sent on Peripherals")
     println("■ Data is recommended to be written on 10 bits for better understanding")
-    println("■ Initializing...")
-    Time.sleep(3000)
+    print("■ Initializing⬝")
+    Time.sleep(1000)
+    print("⬝")
+    Time.sleep(1000)
+    print("⬝\n")
+    Time.sleep(1000)
     println("=============================================================================")
     while (true) {
         print("Data to LCD: ")

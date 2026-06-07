@@ -3,9 +3,23 @@ import isel.leic.utils.Time
 //                                                          M
 //======================================================================================================================
 object M {
-    /** Returns the logic value of the maintenance key**/
+    /**
+     * Function: enabled()
+     *
+     * Description: Returns the logic value of the maintenance key
+     * @param void
+     * @return Boolean - Logic value of the bit of interest
+     * @see HAL.isBit
+     */
     fun enabled() = HAL.isBit(INPUTPORTS.M_OUT.mask)
-    /**Inits the object**/
+    /**
+     * Function: init()
+     *
+     * Description: This functions inits the object
+     * @param void
+     * @return void
+     * @see HAL.init
+     */
     fun init() {
         HAL.init()
     }
@@ -18,8 +32,12 @@ fun main() {
     TUI.init()
     println("■ Press the M button")
     println("■ On FPGA, use Switch 4")
-    println("■ Initializing...")
-    Time.sleep(3000)
+    print("■ Initializing⬝")
+    Time.sleep(1000)
+    print("⬝")
+    Time.sleep(1000)
+    print("⬝\n")
+    Time.sleep(1000)
     println("=============================================================================")
     var prev = M.enabled()
     while (true) {

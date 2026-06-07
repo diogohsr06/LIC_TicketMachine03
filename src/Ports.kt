@@ -1,7 +1,13 @@
 //======================================================================================================================
 //                                            USBPORT INPUTS & OUTPUTS
 //======================================================================================================================
-/**OUTPUT PORTS MASKS**/
+/**
+ * Class: OUTPUTPORTS()
+ *
+ * Description: This enumerated class stores the masks
+ * of the outports
+ * @param mask Corresponding bit
+ */
 enum class OUTPUTPORTS(val mask: Int) {
     SDX(0b00000001),
     SCLK(0b00000010),
@@ -12,7 +18,13 @@ enum class OUTPUTPORTS(val mask: Int) {
     COLLECT(0b01000000),
     TXclk(0b10000000),
 }
-/**INPUT PORTS MASKS**/
+/**
+ * Class: INPUTPORTS()
+ *
+ * Description: This enumerated class stores the masks
+ * of the inports
+ * @param mask Corresponding bit
+ */
 enum class INPUTPORTS(val mask: Int) {
     COIN_ID0(0b00000001),
     COIN_ID1(0b00000010),

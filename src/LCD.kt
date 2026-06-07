@@ -4,10 +4,19 @@ import isel.leic.utils.Time
 //                                              LIQUID CRYSTAL DISPLAY
 //======================================================================================================================
 object LCD {
-    /**Dimensão do display**/
+    /**Display Dimension**/
     const val LINES = 2
     const val COLS = 16
-    /**Escreve um Byte de comando/dados no LCD em série**/
+    /**
+     * Protected Function: writeByteSerial()
+     *
+     * Description: Serially writes a command/data byte on LCD,
+     * through a serial emitter
+     * @param rs Register select - Selection between a command and a data
+     * @param data data to be sent
+     * @return void
+     * @see SerialEmitter.send
+     */
     private fun writeByteSerial(rs: Boolean, data: Int) {
         val rsBit = if (rs) 1 else 0
         val frame1 = rsBit or (data shl 1) or (1 shl 9)
@@ -15,19 +24,50 @@ object LCD {
         SerialEmitter.send(SerialEmitter.Peripherial.LCD, frame1)
         SerialEmitter.send(SerialEmitter.Peripherial.LCD, frame2)
     }
-    /**Escreve um Byte de comando/dados no LCD**/
+    /**
+     * Protected Function: writeByte()
+     *
+     * Description: Writes a command/data byte on LCD.
+     * @param rs Register Select - Selection between a command and a data
+     * @param data data to be sent
+     * @return void
+     * @see writeByteSerial
+     */
     private fun writeByte(rs: Boolean, data: Int) {
         writeByteSerial(rs, data)
     }
-    /**Escreve um comando no LCD**/
+    /**
+     * Protected Function: writeCMD()
+     *
+     * Description: Writes a command on LCD.
+     * @param data Command to be sent (RS on high)
+     * @return void
+     * @see writeByte
+     */
     private fun writeCMD(data: Int) {
         writeByte(false, data)
     }
-    /**Escreve um dado**/
+    /**
+     * Protected Function: writeDATA()
+     *
+     * Description: Writes data on LCD.
+     * @param data Data to be sent (RS on low)
+     * @return void
+     * @see writeByte
+     */
     private fun writeDATA(data: Int) {
         writeByte(true, data)
     }
-    /**Creates custom chars**/
+    /**
+     * Protected Function: createChar()
+     *
+     * Description: Creates & registers special characters on LCD memory
+     * @param location Memory address for char to be stored
+     * @param pattern Array of the custom char which represents the matrix of pixels
+     * @return void
+     * @see writeDATA
+     * @see writeCMD
+     */
     private fun createChar(location: Int, pattern: IntArray) {
         val address = (location and 0x07) shl 3
         writeCMD(0x40 or address)
@@ -36,7 +76,17 @@ object LCD {
         }
         writeCMD(0x80)
     }
-    /**Envia a sequência de iniciação para comunicação a 8 bits**/
+    /**
+     * Function: init()
+     *
+     * Description: This functions inits the LCD for communication, display mode,
+     * and loads special chars. Sends the command sequence needed for 8-bit communication.
+     * @param void
+     * @return void
+     * @see writeCMD
+     * @see Time.sleep
+     * @see createChar
+     */
     fun init() {
         writeCMD(0b0011_0000)
         Time.sleep(20)
@@ -52,20 +102,51 @@ object LCD {
         createChar(1, upArrow)
         createChar(2, downArrow)
     }
-    /**Escreve um carater na posição corrente**/
+    /**
+     * Function: write()
+     *
+     * Description: writes a Char in current cursor position
+     * @param c Char to be displayed
+     * @return void
+     * @see writeDATA
+     */
     fun write(c: Char) {
         writeDATA(c.code)
     }
-    /**Escreve uma string na posição corrente**/
+    /**
+     * Function: write()
+     *
+     * Description: writes a String/Char sequence from current cursor position
+     * @param text String to be displayed
+     * @return void
+     * @see writeDATA
+     */
     fun write(text: String) {
-        for (texto in text)
-            writeDATA(texto.code)
+        for (i in text)
+            writeDATA(i.code)
     }
-    /**Envia comando para posicionar cursor('line':0..LINES-1, 'column':0..COLS-1)**/
+    /**
+     * Function: cursor()
+     *
+     * Description: Positions the cursor on specified line & column
+     * @param line line to position
+     * @param column column to position
+     * @return void
+     * @see writeCMD
+     */
     fun cursor(line: Int, column: Int) {
         writeCMD((line * 0x40 + column) or 0x80)
     }
-    /**Envia comando para limpar o ecrã e posicionar o cursor em (0,0)**/
+    /**
+     * Function: clear()
+     *
+     * Description: Sends command to clear the display and set the cursor
+     * on coordinates (0,0)
+     * @param void
+     * @return void
+     * @see writeCMD
+     * @see cursor
+     */
     fun clear() {
         writeCMD(0x01)
         cursor(0, 0)
@@ -77,8 +158,12 @@ object LCD {
 fun main() {
     LCD.init()
     println("■ Write the text you want to see displayed")
-    println("■ Initializing...")
-    Time.sleep(3000)
+    print("■ Initializing⬝")
+    Time.sleep(1000)
+    print("⬝")
+    Time.sleep(1000)
+    print("⬝\n")
+    Time.sleep(1000)
     println("=============================================================================")
     while(true) {
         print("Write: ")
