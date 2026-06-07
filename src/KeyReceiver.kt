@@ -1,10 +1,15 @@
 import isel.leic.utils.Time
 
+//======================================================================================================================
+//                                                      Key Receiver
+//======================================================================================================================
 object KeyReceiver {
+    /**Inits the object**/
     fun init() {
         HAL.init()
         HAL.clrBits(OUTPUTPORTS.TXclk.mask)
     }
+    /**Builds the frame as data is received serially. Detects protocol errors and isolates the KeyCode **/
     fun serialReceiver(): Int {
         if (HAL.isBit(INPUTPORTS.TXD.mask)) return -1
         var frame = 0
@@ -24,14 +29,29 @@ object KeyReceiver {
         else return (key shr 1) and 0b1111
     }
 }
-/**Teste**/
+//======================================================================================================================
+//                                                      TESTBENCH
+//======================================================================================================================
 fun main() {
     KeyReceiver.init()
+    TUI.init()
+    println("■ Make sure to not spam keys, ring buffer will store them all")
+    println("■ Insert sleep functions on serial receiver to see the protocol work")
+    println("■ Initializing...")
+    Time.sleep(3000)
+    println("=============================================================================")
     while (true) {
         Time.sleep(2000)
-        println("Press a key")
+        println("■ Press a key")
         Time.sleep(5000)
         val keyCode = KeyReceiver.serialReceiver()
-        println("Code: $keyCode")
+        if (keyCode == -1) {
+            println("Code: -1 | None")
+            TUI.write("Code: -1 | None", 0, 0, true, true)
+        }
+        else {
+            println("Code: $keyCode | ${keyCode.toString(2).padStart(4, '0')}")
+            TUI.write("Code: $keyCode | ${keyCode.toString(2).padStart(4, '0')}", 0, 0, true, true)
+        }
     }
 }

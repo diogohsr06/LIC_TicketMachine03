@@ -1,6 +1,8 @@
 import isel.leic.utils.Time
 
-/**Keyboard**/
+//======================================================================================================================
+//                                                      Keyboard
+//======================================================================================================================
 object KBD {
     const val NONE = 0;
     val none = NONE.toChar()
@@ -45,10 +47,18 @@ object KBD {
         return none
     }
 }
-/**Teste**/
+//======================================================================================================================
+//                                                      TESTBENCH
+//======================================================================================================================
 fun main() {
     KBD.init()
+    println("■ To test Ring buffer: Turn software off and press keys")
+    println("■ Test different repeat intervals with Switches 5 & 6")
+    println("■ Initializing...")
+    Time.sleep(3000)
+    println("=============================================================================")
+    print("Keys pressed: ")
     while(true) {
-        println("Key: ${KBD.waitKey(100000)}")
+        print("${KBD.waitKey(100000)}, ")
     }
 }

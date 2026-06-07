@@ -1,3 +1,7 @@
+//======================================================================================================================
+//                                                    CUSTOM CHARS
+//======================================================================================================================
+/**Pattern for euro**/
 val euro = intArrayOf(
     0b00111,
     0b01000,
@@ -8,6 +12,7 @@ val euro = intArrayOf(
     0b00111,
     0b00000
 )
+/**Pattern for up arrow**/
 val upArrow = intArrayOf(
     0b00000,
     0b00100,
@@ -18,6 +23,7 @@ val upArrow = intArrayOf(
     0b00100,
     0b00000
 )
+/**Pattern for down arrow**/
 val downArrow = intArrayOf(
     0b00000,
     0b00100,

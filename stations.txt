@@ -31,6 +31,6 @@
 75;0;Pokemon
 225;0;Lego Ninjago
 150;0;Lazytown
-275;0;Troy
+275;2;Troy
 95;0;Teen Titans
 130;0;Red Dead Redemption

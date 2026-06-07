@@ -1,6 +1,8 @@
 import java.text.DecimalFormat
 
-/**Utilities**/
+//======================================================================================================================
+//                                                      Utilities
+//======================================================================================================================
 object Others {
     private val euroFormat = DecimalFormat("0.00")
     fun centsToEuros(value: Int): String {
@@ -16,8 +18,4 @@ object Others {
         }
         return value.coerceIn(0, maxSize - 1)
     }
-}
-
-fun main() {
-    println(Others.centsToEuros(250))
 }

@@ -1,12 +1,14 @@
-import TUI.vendingAborted
 import isel.leic.utils.Time
 import kotlin.system.exitProcess
 
-/**Ticket Machine APP**/
+//======================================================================================================================
+//                                                 TICKET MACHINE
+//======================================================================================================================
 object TicketMachineApp {
     private const val ORIGIN_STATION = 0
     private const val WAIT_KEY_MS = 2000L
 
+    /**Maintenance mode**/
     private fun maintenanceMode() {
         val options = listOf(
             "#-Print Ticket",
@@ -118,15 +120,16 @@ object TicketMachineApp {
         while (M.enabled()) {
             TUI.maintenanceScreen(options[optIdx])
             when (KBD.waitKey(WAIT_KEY_MS)) {
-                '#'      -> printTicket_M()
-                'A'      -> stationCnt()
-                'B'      -> coinsCnt()
-                'C'      -> resetCounters()
-                'D'      -> if (TUI.yesOrNo("Shutdown?", 5000L)) shutDown()
+                '#' -> printTicket_M()
+                'A' -> stationCnt()
+                'B' -> coinsCnt()
+                'C' -> resetCounters()
+                'D' -> if (TUI.yesOrNo("Shutdown?", 5000L)) shutDown()
                 KBD.none -> optIdx = (optIdx + 1) % options.size
             }
         }
     }
+    /**Vending mode**/
     private fun normalMode() {
         val stations = Stations.stations
         if (stations.isEmpty()) return
@@ -218,6 +221,7 @@ object TicketMachineApp {
             }
         }
     }
+    /**Inits the object**/
     fun init() {
         M.init()
         CoinAcceptor.init()
@@ -226,6 +230,7 @@ object TicketMachineApp {
         CoinDeposit.init()
         Stations.init()
     }
+    /**Main program**/
     fun program() {
         while (true) {
             TUI.startMenu()
@@ -235,6 +240,9 @@ object TicketMachineApp {
     }
 }
 
+//======================================================================================================================
+//                                                      MAIN
+//======================================================================================================================
 fun main() {
     TicketMachineApp.init()
     println("=======================Navigation in Vending Mode=======================")

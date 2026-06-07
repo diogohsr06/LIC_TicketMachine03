@@ -1,6 +1,8 @@
 import isel.leic.utils.Time
 
-/**Serial Emitter**/
+//======================================================================================================================
+//                                                  SERIAL EMITTER
+//======================================================================================================================
 object SerialEmitter {
     enum class Peripherial {LCD, TICKET}
     /**Inicia a classe**/
@@ -10,10 +12,10 @@ object SerialEmitter {
         HAL.setBits(OUTPUTPORTS.SS_TD.mask)
         HAL.clrBits(OUTPUTPORTS.SCLK.mask)
     }
-    /**Envia tramas para os diferentes módulos SerialReceiver**/
-    /**Identificando o periférico de destino em 'addr'**/
-    /**os bits de dados em 'data'**/
-    /**e em 'size' o número de bits a enviar **/
+    /**Envia tramas para os diferentes módulos SerialReceiver
+    Identificando o periférico de destino em 'addr'
+    os bits de dados em 'data'
+    e em 'size' o número de bits a enviar **/
     fun send(addr: Peripherial, data: Int) {
         val SS = if (addr == Peripherial.LCD) OUTPUTPORTS.SS_LCD.mask else OUTPUTPORTS.SS_TD.mask
         HAL.clrBits(SS)
@@ -27,12 +29,27 @@ object SerialEmitter {
         }
         HAL.setBits(SS)
     }
-    /**Retorna informação se o periférico está ocupado**/
-    fun isBusy(): Boolean = HAL.isBit(INPUTPORTS.BUSY.mask)
 }
-/**Teste**/
+//======================================================================================================================
+//                                                      TESTBENCH
+//======================================================================================================================
 fun main() {
     SerialEmitter.init()
-    SerialEmitter.send(SerialEmitter.Peripherial.LCD, 0b0010100101)
-    SerialEmitter.send(SerialEmitter.Peripherial.TICKET, 0b1010100111)
+    println("■ Write the data you want to be sent on Peripherals")
+    println("■ Data is recommended to be written on 10 bits for better understanding")
+    println("■ Initializing...")
+    Time.sleep(3000)
+    println("=============================================================================")
+    while (true) {
+        print("Data to LCD: ")
+        val dataLCD = readln()
+        val dataLCDbin = if (dataLCD.length == 10 && dataLCD.all { it == '0' || it == '1' }) dataLCD.toInt(2) else dataLCD.toInt()
+        print("Data to TD: ")
+        val dataTD = readln()
+        val dataTDbin = if (dataTD.length == 10 && dataTD.all { it == '0' || it == '1' }) dataTD.toInt(2) else dataTD.toInt()
+        SerialEmitter.send(SerialEmitter.Peripherial.LCD, dataLCDbin)
+        SerialEmitter.send(SerialEmitter.Peripherial.TICKET, dataTDbin)
+        print("■ Sent!\n")
+        println("--------------------------------------------------------------------")
+    }
 }

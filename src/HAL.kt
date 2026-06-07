@@ -1,6 +1,8 @@
 import isel.leic.UsbPort
 
-/**Hardware Abstract Layer**/
+//======================================================================================================================
+//                                              HARDWARE ABSTRACT LAYER
+//======================================================================================================================
 object HAL {
     private var usbport = 0
     /**Inicia o objeto**/
@@ -33,25 +35,34 @@ object HAL {
     }
 }
 
-/**Teste**/
+//======================================================================================================================
+//                                                      TESTBENCH
+//======================================================================================================================
 fun main() {
+    println("Teste1: Escrita")
     HAL.init()
     UsbPort.write(0b01101110)
+    Thread.sleep(5000)
 
+    println("Teste2: Leitura")
     println(HAL.readBits(0b00001111))
-    Thread.sleep(2000)
+    Thread.sleep(5000)
 
+    println("Teste3: isBit")
     println(HAL.isBit(0b00000010))
-    Thread.sleep(2000)
+    Thread.sleep(5000)
 
+    println("Teste4: Bits a 1")
     HAL.setBits(0b00001111)
     println(UsbPort.read())
-    Thread.sleep(2000)
+    Thread.sleep(5000)
 
+    println("Teste5: Bits a 0")
     HAL.clrBits(0b11110000)
     println(UsbPort.read())
-    Thread.sleep(2000)
+    Thread.sleep(5000)
 
+    println("Teste6: Escrita")
     HAL.writeBits(0b00001111, 0b11110000)
     println(UsbPort.read())
 }

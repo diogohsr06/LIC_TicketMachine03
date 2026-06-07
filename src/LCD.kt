@@ -1,6 +1,8 @@
 import isel.leic.utils.Time
 
-/**Liquid Cristal Display**/
+//======================================================================================================================
+//                                              LIQUID CRYSTAL DISPLAY
+//======================================================================================================================
 object LCD {
     /**Dimensão do display**/
     const val LINES = 2
@@ -25,6 +27,7 @@ object LCD {
     private fun writeDATA(data: Int) {
         writeByte(true, data)
     }
+    /**Creates custom chars**/
     private fun createChar(location: Int, pattern: IntArray) {
         val address = (location and 0x07) shl 3
         writeCMD(0x40 or address)
@@ -45,9 +48,9 @@ object LCD {
         writeCMD(0b0000_0001)
         writeCMD(0b0000_0110)
         writeCMD(0b0000_1111)
-        LCD.createChar(0, euro)
-        LCD.createChar(1, upArrow)
-        LCD.createChar(2, downArrow)
+        createChar(0, euro)
+        createChar(1, upArrow)
+        createChar(2, downArrow)
     }
     /**Escreve um carater na posição corrente**/
     fun write(c: Char) {
@@ -68,21 +71,20 @@ object LCD {
         cursor(0, 0)
     }
 }
-/**Teste**/
+//======================================================================================================================
+//                                                      TESTBENCH
+//======================================================================================================================
 fun main() {
     LCD.init()
-    Time.sleep(2000)
+    println("■ Write the text you want to see displayed")
+    println("■ Initializing...")
+    Time.sleep(3000)
+    println("=============================================================================")
     while(true) {
+        print("Write: ")
+        val text = readln()
         LCD.clear()
-        LCD.cursor(0, 0)
-        LCD.write("String")
-        LCD.cursor(1,0)
-        LCD.write(0.toChar())
-        LCD.cursor(1,1)
-        LCD.write(1.toChar())
-        LCD.cursor(1,2)
-        LCD.write(2.toChar())
-        Time.sleep(5000)
+        LCD.write(text)
     }
 }
 
