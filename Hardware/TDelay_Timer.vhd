@@ -42,7 +42,7 @@ signal tick_500ms : std_logic;								--Saida do CLKDIV (Ticks de 500ms)
 signal count_out  : std_logic_vector(3 downto 0);		--Valor de contagem em ticks de 500ms
 
 begin
-UTICKGEN: CLKDIV500 generic map ( div => 25000000 ) port map (		--Instanciaçao do Divisor de relogio
+UTICKGEN: CLKDIV500 generic map ( div => 12500000 ) port map (		--Instanciaçao do Divisor de relogio
           clk_in   => Osc,
           clr      => TimerClr,
           tick_out => tick_500ms);
