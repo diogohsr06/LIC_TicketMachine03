@@ -192,11 +192,11 @@ object TUI {
      * @param price Base ticket price
      * @return void
      */
-    fun printTicket2(station: String, rt: Boolean, price: Double) {
+    fun printTicket2(station: String, keyCode: Int, rt: Boolean, price: Double) {
         val price2 = price * if (rt) 2 else 1
         write(station, 0, 0, true, true)
-        if (rt) write("${1.toChar()}${2.toChar()}         ${"%.2f".format(price2)}${0.toChar()}", 1, 0, false, false)
-        if (!rt) write("${1.toChar()}          ${"%.2f".format(price2)}${0.toChar()}", 1, 0, false, false)
+        if (rt) write("${"%02d".format(keyCode)}${1.toChar()}${2.toChar()}       ${"%.2f".format(price2)}${0.toChar()}", 1, 0, false, false)
+        if (!rt) write("${"%02d".format(keyCode)}${1.toChar()}        ${"%.2f".format(price2)}${0.toChar()}", 1, 0, false, false)
     }
     /**
      * Function: processing()
@@ -323,7 +323,7 @@ fun main() {
                         '6' -> TUI.processing("Troia")
                         '7' -> TUI.printCoins(2.55, 4, 8)
                         '8' -> TUI.stationCount("Wakanda", 7, 2)
-                        '9' -> TUI.printTicket2("Caraibas", true, 2.25)
+                        '9' -> TUI.printTicket2("Caraibas", 16, false, 2.25)
                         'D' -> break
                     }
                 }

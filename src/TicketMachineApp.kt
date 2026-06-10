@@ -303,9 +303,9 @@ object TicketMachineApp {
         var redraw = true
         while (!M.enabled()) {
             val st = stations[idx]
-            val price = st.price * if (roundTrip) 2 else 1
+            val price = st.price
             pollCoin()
-            TUI.printTicket(st.station, idx, price / 100.0)
+            TUI.printTicket2(st.station, idx, roundTrip, price / 100.0)
             when (val key = KBD.waitKey(WAIT_KEY_MS)) {
                 'A' -> idx = if (idx > 0) idx - 1 else stations.size - 1
                 'B' -> idx = if (idx < stations.size - 1) idx + 1 else 0
@@ -396,7 +396,7 @@ object TicketMachineApp {
         val scrollSpeedMs = 350L
         val welcomeText = "${6.toChar()}Press # to Enter${7.toChar()}        ${6.toChar()}Press M key to Enter Maintenance${7.toChar()}"
         TUI.startMenu()
-        Time.sleep(3000)
+        Time.sleep(1500)
         while (true) {
             if (M.enabled()) {
                 maintenanceMode()

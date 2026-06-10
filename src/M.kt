@@ -39,6 +39,7 @@ fun main() {
     print("⬝\n")
     Time.sleep(1000)
     println("=============================================================================")
+    print("\r${Miscellaneous.RED}${Miscellaneous.BOLD}■ M State: OFF")
     var prev = M.enabled()
     while (true) {
         val curr = M.enabled()
