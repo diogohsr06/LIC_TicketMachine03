@@ -52,9 +52,9 @@ object KeyReceiver {
 fun main() {
     KeyReceiver.init()
     TUI.init()
-    println("■ Make sure to not spam keys, ring buffer will store them all")
-    println("■ Insert sleep functions on serial receiver to see the protocol work")
-    print("■ Initializing⬝")
+    println("${Miscellaneous.RED}${Miscellaneous.BOLD}■ Make sure to not spam keys, ring buffer will store them all")
+    println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Insert sleep functions on serial receiver to see the protocol work")
+    print("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Initializing⬝")
     Time.sleep(1000)
     print("⬝")
     Time.sleep(1000)
@@ -63,15 +63,15 @@ fun main() {
     println("=============================================================================")
     while (true) {
         Time.sleep(2000)
-        println("■ Press a key")
+        println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Press a key${Miscellaneous.RESET}")
         Time.sleep(5000)
         val keyCode = KeyReceiver.serialReceiver()
         if (keyCode == -1) {
-            println("Code: -1 | None")
+            println("${Miscellaneous.RED}Code: -1 | None")
             TUI.write("Code: -1 | None", 0, 0, true, true)
         }
         else {
-            println("Code: $keyCode | ${keyCode.toString(2).padStart(4, '0')}")
+            println("${Miscellaneous.GREEN}Code: $keyCode | ${keyCode.toString(2).padStart(4, '0')}")
             TUI.write("Code: $keyCode | ${keyCode.toString(2).padStart(4, '0')}", 0, 0, true, true)
         }
     }

@@ -79,16 +79,16 @@ object KBD {
 //======================================================================================================================
 fun main() {
     KBD.init()
-    println("■ To test Ring buffer: Turn software off and press keys")
-    println("■ Test different repeat intervals with Switches 5 & 6")
-    print("■ Initializing⬝")
+    println("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ To test Ring buffer: Turn software off and press keys")
+    println("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Test different repeat intervals with Switches 5 & 6")
+    print("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Initializing⬝")
     Time.sleep(1000)
     print("⬝")
     Time.sleep(1000)
     print("⬝\n")
     Time.sleep(1000)
-    println("=============================================================================")
-    print("Keys pressed: ")
+    println("=============================================================================${Miscellaneous.RESET}")
+    print("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}Keys pressed:${Miscellaneous.GREEN} ")
     while(true) {
         print("${KBD.waitKey(100000)}, ")
     }

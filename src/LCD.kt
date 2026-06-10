@@ -73,6 +73,7 @@ object LCD {
         writeCMD(0x40 or address)
         for (i in 0..7) {
             writeDATA(pattern[i])
+            Time.sleep(2)
         }
         writeCMD(0x80)
     }
@@ -101,6 +102,11 @@ object LCD {
         createChar(0, euro)
         createChar(1, upArrow)
         createChar(2, downArrow)
+        createChar(3, fullBlock)
+        createChar(4, emptyBlock)
+        createChar(5, upTri)
+        createChar(6, rightTri)
+        createChar(7, leftTri)
     }
     /**
      * Function: write()
@@ -138,6 +144,28 @@ object LCD {
         writeCMD((line * 0x40 + column) or 0x80)
     }
     /**
+     * Function: hideCursor()
+     *
+     * Description: Hides the cursor (misc)
+     * @param void
+     * @return void
+     * @see writeCMD
+     */
+    fun hideCursor() {
+        LCD.writeCMD(0x0C)
+    }
+    /**
+     * Function: showCursor()
+     *
+     * Description: Shows the cursor (misc)
+     * @param void
+     * @return void
+     * @see writeCMD
+     */
+    fun showCursor() {
+        LCD.writeCMD(0x0F)
+    }
+    /**
      * Function: clear()
      *
      * Description: Sends command to clear the display and set the cursor
@@ -157,16 +185,16 @@ object LCD {
 //======================================================================================================================
 fun main() {
     LCD.init()
-    println("■ Write the text you want to see displayed")
-    print("■ Initializing⬝")
+    println("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Write the text you want to see displayed")
+    print("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Initializing⬝")
     Time.sleep(1000)
     print("⬝")
     Time.sleep(1000)
     print("⬝\n")
     Time.sleep(1000)
-    println("=============================================================================")
+    println("=============================================================================${Miscellaneous.RESET}")
     while(true) {
-        print("Write: ")
+        print("${Miscellaneous.YELLOW}Write: ")
         val text = readln()
         LCD.clear()
         LCD.write(text)

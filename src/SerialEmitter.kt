@@ -52,25 +52,25 @@ object SerialEmitter {
 //======================================================================================================================
 fun main() {
     SerialEmitter.init()
-    println("■ Write the data you want to be sent on Peripherals")
-    println("■ Data is recommended to be written on 10 bits for better understanding")
-    print("■ Initializing⬝")
+    println("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Write the data you want to be sent on Peripherals")
+    println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Data is recommended to be written on 10 bits for better understanding")
+    print("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Initializing⬝")
     Time.sleep(1000)
     print("⬝")
     Time.sleep(1000)
     print("⬝\n")
     Time.sleep(1000)
-    println("=============================================================================")
+    println("=============================================================================${Miscellaneous.RESET}")
     while (true) {
-        print("Data to LCD: ")
+        print("${Miscellaneous.GREEN}Data to LCD: ")
         val dataLCD = readln()
         val dataLCDbin = if (dataLCD.length == 10 && dataLCD.all { it == '0' || it == '1' }) dataLCD.toInt(2) else dataLCD.toInt()
-        print("Data to TD: ")
+        print("${Miscellaneous.GREEN}Data to TD: ")
         val dataTD = readln()
         val dataTDbin = if (dataTD.length == 10 && dataTD.all { it == '0' || it == '1' }) dataTD.toInt(2) else dataTD.toInt()
         SerialEmitter.send(SerialEmitter.Peripherial.LCD, dataLCDbin)
         SerialEmitter.send(SerialEmitter.Peripherial.TICKET, dataTDbin)
-        print("■ Sent!\n")
-        println("--------------------------------------------------------------------")
+        print("${Miscellaneous.GREEN}■ Sent!\n")
+        println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}--------------------------------------------------------------------")
     }
 }

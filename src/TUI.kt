@@ -62,6 +62,7 @@ object TUI {
     fun init() {
         LCD.init()
         KBD.init()
+        LCD.hideCursor()
     }
     /**
      * Function: startMenu()
@@ -72,7 +73,7 @@ object TUI {
      * @see SimpleDateFormat
      */
     fun startMenu() {
-        write("Ticket to Ride", 0, 0, true, true)
+        write("${5.toChar()}ByteTrip!${5.toChar()}", 0, 0, true, true)
         val dateStr = dateFormatter.format(Date())
         write(dateStr, 1, 0, true, false)
     }
@@ -84,7 +85,7 @@ object TUI {
      * @return void
      */
     fun maintenanceScreen(option: String) {
-        write("Maintenance", 0, 0, true, true)
+        write("${6.toChar()}Maintenance${7.toChar()}", 0, 0, true, true)
         write(option, 1, 0, true, false)
     }
     /**
@@ -109,7 +110,7 @@ object TUI {
      */
     fun yesOrNo(text: String, time: Long): Boolean {
         write(text, 0, 0, true, true)
-        write("*-Yes   other-No", 1, 0, true, false)
+        write("*>Yes   Other>No", 1, 0, true, false)
         return KBD.waitKey(time) == '*'
     }
     /**
@@ -142,7 +143,7 @@ object TUI {
      */
     fun collectTicket(station: String) {
         write(station, 0, 0, true, true)
-        write("Collect Ticket", 1, 0, true, false)
+        write("${6.toChar()}Collect Ticket${7.toChar()}", 1, 0, true, false)
     }
     /**
      * Function: collectFinished()
@@ -165,8 +166,8 @@ object TUI {
      */
     fun toPrint(station: String, rt: Boolean) {
         write(station, 0, 0, true, true)
-        if (rt) write("${1.toChar()} *- to Print", 1, 0, true, false)
-        if (!rt) write("${1.toChar()}${2.toChar()} *- to Print", 1, 0, true, false)
+        if (rt) write("${1.toChar()} * > To Print", 1, 0, true, false)
+        if (!rt) write("${1.toChar()}${2.toChar()} * > To Print", 1, 0, true, false)
     }
     /**
      * Function: printTicket()
@@ -206,7 +207,12 @@ object TUI {
      */
     fun processing(station: String) {
         write(station, 0, 0, true, true)
-        write("Processing ...", 1, 0, true, false)
+        write("Processing", 1, 0, false, false)
+        for (i in 1..3) {
+            val blocks = "${3.toChar()}".repeat(i) + "${4.toChar()}".repeat(3 - i)
+            write(blocks, 1, 12, false, false)
+            Time.sleep(1000)
+        }
     }
     /**
      * Function: printCoins()
@@ -243,22 +249,22 @@ object TUI {
 //======================================================================================================================
 fun main() {
     TUI.init()
-    println("■ Select to skip to desired test")
-    println("■ Keyboard Test -> 0\n■ Y/N Test -> 1\n■ Interfaces -> 2")
-    print("■ Initializing⬝")
+    println("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Select to skip to desired test")
+    println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Keyboard Test -> 0\n■ Y/N Test -> 1\n■ Interfaces -> 2")
+    print("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Initializing⬝")
     Time.sleep(1000)
     print("⬝")
     Time.sleep(1000)
     print("⬝\n")
     Time.sleep(1000)
-    println("=============================================================================")
+    println("=============================================================================${Miscellaneous.RESET}")
     while (true) {
         TUI.startMenu()
         val testSelect = KBD.waitKey(100000)
         when (testSelect) {
             '0' -> {
-                println("■ Press C to clear display")
-                println("■ Press D to quit")
+                println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Press C to clear display")
+                println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Press D to quit")
                 println("=============================================================================")
                 TUI.write("Test1: Keyboard", 0, 0, true, true)
                 Time.sleep(1000)
@@ -281,7 +287,7 @@ fun main() {
                 }
             }
             '1' -> {
-                println("■ Press D to quit")
+                println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Press D to quit")
                 println("=============================================================================")
                 TUI.write("Test2: Yes or No", 0, 0, true, true)
                 Time.sleep(1000)
@@ -289,15 +295,15 @@ fun main() {
                 Time.sleep(3000)
                 LCD.clear()
                 val prompts = arrayOf("LEIC melhor curso?", "Cereais primeiro?", "Messi > CR7")
-                for (pergunta in prompts) {
+                for (i in prompts) {
                     if (KBD.getKey() == 'D') break
-                    val yN = TUI.yesOrNo(pergunta, 5000)
+                    val yN = TUI.yesOrNo(i, 5000)
                     TUI.write(if (yN) "You choose: Yes" else "You choose: No", 0, 0, true, true)
                     Time.sleep(2000)
                 }
             }
             '2' -> {
-                println("■ Press D to quit")
+                println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Press D to quit")
                 println("=============================================================================")
                 TUI.write("Interfaces", 0, 0, true, true)
                 Time.sleep(1000)

@@ -60,20 +60,20 @@ object Stations {
 //======================================================================================================================
 fun main() {
     Stations.init()
-    print("■ Initializing⬝")
+    print("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Initializing⬝")
     Time.sleep(1000)
     print("⬝")
     Time.sleep(1000)
     print("⬝\n")
     Time.sleep(1000)
     println("=============================================================================")
-    println("■ Avalable Stations:")
-    Stations.stations.forEach { println("- ${it.station} (Price: ${it.price})") }
-    println("======================================")
-    print("■ Insert station for testing: ")
+    println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Avalable Stations:${Miscellaneous.RESET}")
+    Stations.stations.forEach { println("${Miscellaneous.GREEN}- ${it.station} (Price: ${it.price})") }
+    println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}======================================")
+    print("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Insert station for testing: ")
     val s = readln()
-    println("\n■ Station '$s' selected.")
-    println("■ Choose a task:")
+    println("\n${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Station '$s' selected.")
+    println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Choose a task:")
     println("0 - Sell a ticket")
     println("1 - Reset counters")
     println("2 - Save")
@@ -83,27 +83,27 @@ fun main() {
     while (!exit) {
         val station = Stations.stations.find { it.station == s }
         if (station == null) {
-            print("■ Error: Station '$s' not found!")
+            print("${Miscellaneous.RED}${Miscellaneous.BOLD}■ Error: Station '$s' not found!${Miscellaneous.RESET}")
             break
         }
-        print("\r■ Station: ${station.station} | Sold: ${station.sold}\n")
+        print("\r${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Station: ${station.station} | Sold: ${station.sold}\n")
         print("\r> ")
         val key = readln().toInt()
         when (key) {
             0 -> {
                 Stations.sold(s)
-                println("■ Ticket for $s sold!")
+                println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Ticket for $s sold!")
             }
             1 -> {
                 Stations.reset()
-                println("■ Counters have been reset!")
+                println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Counters have been reset!")
             }
             2 -> {
                 Stations.save()
-                println("■ Saved!")
+                println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Saved!")
             }
             3 -> {
-                println("■ Quitting...")
+                println("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Quitting...")
                 exit = true
             }
         }

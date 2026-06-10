@@ -86,45 +86,45 @@ object HAL {
 //======================================================================================================================
 fun main() {
     HAL.init()
-    print("■ Initializing⬝")
+    print("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Initializing⬝")
     Time.sleep(1000)
     print("⬝")
     Time.sleep(1000)
     print("⬝\n")
     Time.sleep(1000)
     println("=============================================================================")
-    println("■ Choose a task:")
+    println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Choose a task:${Miscellaneous.YELLOW}")
     println("0..7 - Toggle bit")
     println("8 - Read Port")
     println("9 - Set masked bits")
     println("10 - Clear masked bits")
     println("11 - Quit")
-    println("======================================")
+    println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}======================================")
     var quit = false
     while (!quit) {
         val portState = UsbPort.read()
-        print("\r■ Current Port State: 0b${portState.toString(2).padStart(8, '0')} | Dec: $portState\n")
-        print("\r> ")
+        print("\r${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Current Port State: 0b${portState.toString(2).padStart(8, '0')} | Dec: $portState\n")
+        print("\r${Miscellaneous.GREEN}${Miscellaneous.BOLD}> ")
         val key = readln().toInt()
             when {
                 key in 0..7 -> {
                     val bitIndex = key
                     val mask = 1 shl bitIndex
                     if (HAL.isBit(mask)) HAL.clrBits(mask) else HAL.setBits(mask)
-                    println("■ Toggled bit $bitIndex")
+                    println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Toggled bit $bitIndex")
                 }
                 key == 8 -> {
-                    print("Mask to read (8 bits): ")
+                    print("${Miscellaneous.GREEN}${Miscellaneous.BOLD}Mask to read (8 bits): ")
                     val mask = readln().toIntOrNull(2) ?: 0
-                    println("■ Port read: ${HAL.readBits(mask)}")
+                    println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Port read: ${HAL.readBits(mask)}")
                 }
                 key == 9 -> {
-                    print("Mask to set (8 bits): ")
+                    print("${Miscellaneous.GREEN}${Miscellaneous.BOLD}Mask to set (8 bits): ")
                     val mask = readln().toIntOrNull(2) ?: 0
                     HAL.setBits(mask)
                 }
                 key == 10 -> {
-                    print("Mask to clear (8 bits): ")
+                    print("${Miscellaneous.GREEN}${Miscellaneous.BOLD}Mask to clear (8 bits): ")
                     val mask = readln().toIntOrNull(2) ?: 0
                     HAL.clrBits(mask)
                 }

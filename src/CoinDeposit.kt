@@ -112,15 +112,15 @@ object CoinDeposit {
 //======================================================================================================================
 fun main() {
     CoinDeposit.init()
-    print("■ Initializing⬝")
+    print("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Initializing⬝")
     Time.sleep(1000)
     print("⬝")
     Time.sleep(1000)
     print("⬝\n")
     Time.sleep(1000)
     println("=============================================================================")
-    println("■ Available Coins (IDs): 0:5c,\n1:10c,\n2:20c,\n3:50c,\n4:1€,\n5:2€")
-    println("===========================================")
+    println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Available Coins (IDs): 0:5c,\n1:10c,\n2:20c,\n3:50c,\n4:1€,\n5:2€")
+    println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}===========================================")
     println("■ Choose a task:")
     println("0..5 - Insert Coin")
     println("6 - Exchange")
@@ -131,36 +131,36 @@ fun main() {
     println("======================================")
     var quit = false
     while (!quit) {
-        print("\r■ Current Deposit: ${CoinDeposit.getTotal()}c\n")
-        print("\r> ")
+        print("\r${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Current Deposit: ${CoinDeposit.getTotal()}c\n")
+        print("\r${Miscellaneous.GREEN}${Miscellaneous.BOLD}> ")
         val key = readln().toInt()
             when (key) {
                 in 0..5 -> {
                     val id = key
                     CoinDeposit.insert(id)
-                    println("■ Inserted coin ID: $id. New total: ${CoinDeposit.getTotal()}c")
+                    println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Inserted coin ID: $id. New total: ${CoinDeposit.getTotal()}c")
                 }
                 6 -> {
-                    print("■ Amount to exchange for? ")
+                    print("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Amount to exchange for? ")
                     val amount = readln().toIntOrNull() ?: 0
-                    if (CoinDeposit.exchange(amount)) println("■ Exchange successful!")
-                    else println("■ Exchange failed! Deposit insufficient.")
+                    if (CoinDeposit.exchange(amount)) println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Exchange successful!")
+                    else println("${Miscellaneous.RED}${Miscellaneous.BOLD}■ Exchange failed! Deposit insufficient.")
                 }
                 7 -> {
                     CoinDeposit.cancel()
-                    println("■ Task cancelled. Deposit reset.")
+                    println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Task cancelled. Deposit reset.")
                 }
                 8 -> {
                     CoinDeposit.saveCoins()
-                    println("■ Coins saved to file.")
+                    println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Coins saved to file.")
                 }
                 9 -> {
                     CoinDeposit.resetCnt()
-                    println("■ Counters reset.")
+                    println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Counters reset.")
                 }
                 10 -> {
                     quit = true
-                    println("■ Quitting...")
+                    println("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Quitting...")
                 }
             }
     }

@@ -137,8 +137,8 @@ object FileAccess {
 //                                                      TESTBENCH
 //======================================================================================================================
 fun main() {
-    println("■ File Writer & File Reader")
-    print("■ Initializing⬝")
+    println("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ File Writer & File Reader")
+    print("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Initializing⬝")
     Time.sleep(1000)
     print("⬝")
     Time.sleep(1000)
@@ -146,12 +146,12 @@ fun main() {
     Time.sleep(1000)
     println("=============================================================================")
     while (true) {
-        println("■ Choose a task: ")
+        println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Choose a task: ")
         println("1 - Write predefined Arrays")
         println("2 - Read existing files")
         println("3 - Write your own Data")
-        println("D  - Quit")
-        print("> ")
+        println("D - Quit")
+        print(">${Miscellaneous.RESET} ")
         when (readln().uppercase()) {
             "1" -> {
                 val a = arrayOf(
@@ -167,38 +167,38 @@ fun main() {
                     FileAccess.Coins(200, 5))
                 FileAccess.writeStations("testStations.txt", a)
                 FileAccess.writeCoins("testCoins.txt", b)
-                println("■ Data written successfully! Check test files.")
+                println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Data written successfully! Check test files.")
             }
             "2" -> {
                 val s = FileAccess.readStations("testStations.txt")
                 val c = FileAccess.readCoins("testCoins.txt")
-                s.forEach { println("Station: ${it.station}, Price: ${it.price}, Sold: ${it.sold}") }
-                c.forEach { println("Coin: ${it.value}, Amount: ${it.amount}") }
+                s.forEach { println("${Miscellaneous.YELLOW}Station: ${it.station}, Price: ${it.price}, Sold: ${it.sold}") }
+                c.forEach { println("${Miscellaneous.YELLOW}Coin: ${it.value}, Amount: ${it.amount}") }
             }
             "3" -> {
-                println("■ Manual data Insertion")
+                println("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Manual data Insertion")
                 val stations = mutableListOf<FileAccess.Stations>()
-                println("■ Insert Stations (format: price;sold;station) or press Q to finish")
+                println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Insert Stations (format: price;sold;station) or press Q to finish")
                 while (true) {
-                    print("Station: ")
+                    print("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}Station: ")
                     val input = readln()
                     if (input.uppercase() == "Q") break
-                    try { stations.add(FileAccess.toStations(input)) } catch (e: Exception) { println("■ Invalid Format! Use: price;sold;station") }
+                    try { stations.add(FileAccess.toStations(input)) } catch (e: Exception) { println("${Miscellaneous.RED}${Miscellaneous.BOLD}■ Invalid Format! Use: price;sold;station${Miscellaneous.RESET}") }
                 }
                 val coins = mutableListOf<FileAccess.Coins>()
-                println("■ Insert Coins (format: value;amount) or press Q to finish")
+                println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Insert Coins (format: value;amount) or press Q to finish")
                 while (true) {
-                    print("Coin: ")
+                    print("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}Coin: ")
                     val input = readln()
                     if (input.uppercase() == "Q") break
-                    try { coins.add(FileAccess.toCoins(input)) } catch (e: Exception) { println("■ Invalid format! Use: value;amount") }
+                    try { coins.add(FileAccess.toCoins(input)) } catch (e: Exception) { println("${Miscellaneous.RED}${Miscellaneous.BOLD}■ Invalid format! Use: value;amount${Miscellaneous.RESET}") }
                 }
                 if (stations.isNotEmpty()) FileAccess.writeStations("testStations.txt", stations.toTypedArray())
                 if (coins.isNotEmpty()) FileAccess.writeCoins("testCoins.txt", coins.toTypedArray())
-                println("■ Data written successfully! Check test files.")
+                println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Data written successfully! Check test files.")
             }
             "D" -> break
-            else -> println("■ Invalid option, try again.")
+            else -> println("${Miscellaneous.RED}${Miscellaneous.BOLD}■ Invalid option, try again.${Miscellaneous.RESET}")
         }
     }
 }

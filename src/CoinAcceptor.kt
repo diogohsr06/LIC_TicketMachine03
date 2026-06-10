@@ -109,17 +109,17 @@ object CoinAcceptor {
 //======================================================================================================================
 fun main() {
     CoinAcceptor.init()
-    println("■ Requires FPGA")
-    println("■ To select a coin, use Switches 2..0")
-    println("■ To insert a coin, use Switch 3\n")
-    print("■ Initializing⬝")
+    println("${Miscellaneous.RED}${Miscellaneous.BOLD}■ Requires FPGA")
+    println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ To select a coin, use Switches 2..0")
+    println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ To insert a coin, use Switch 3\n")
+    print("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Initializing⬝")
     Time.sleep(1000)
     print("⬝")
     Time.sleep(1000)
     print("⬝\n")
     Time.sleep(1000)
     println("=============================================================================")
-    println("■ Choose a task:")
+    println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Choose a task:")
     println("0 - Accept")
     println("1 - Collect")
     println("2 - Eject")
@@ -129,30 +129,30 @@ fun main() {
     while (!quit) {
         val isInserted = CoinAcceptor.coinInserted()
         val currentId = if (isInserted) CoinAcceptor.getCoinId() else "None"
-        val currentValue = CoinAcceptor.coinValue()?.let { Others.centsToEuros(it) } ?: "N/A"
-        print("\r■ Status: Inserted: $isInserted | ID: $currentId | Value: $currentValue\n")
-        print("\r> ")
+        val currentValue = CoinAcceptor.coinValue()?.let { Utils.centsToEuros(it) } ?: "N/A"
+        print("\r${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Status: Inserted: $isInserted | ID: $currentId | Value: $currentValue\n")
+        print("\r${Miscellaneous.YELLOW}${Miscellaneous.BOLD}> ")
         val key = readln().toInt()
             when (key) {
                 0 -> {
                     if (isInserted) {
-                        println("■ Accepting coin...")
+                        println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Accepting coin...")
                         CoinAcceptor.coinAccept()
                     } else {
-                        println("■ No coin detected to accept!")
+                        println("${Miscellaneous.RED}${Miscellaneous.BOLD}■ No coin detected to accept!")
                     }
                 }
                 1 -> {
-                    println("■ Collecting coin...")
+                    println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Collecting coin...")
                     CoinAcceptor.coinCollect()
                 }
                 2 -> {
-                    println("■ Ejecting coin...")
+                    println("${Miscellaneous.GREEN}${Miscellaneous.BOLD}■ Ejecting coin...")
                     CoinAcceptor.coinReturn()
                 }
                 3 -> {
                     quit = true
-                    println("■ Quitting...")
+                    println("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Quitting...")
                 }
             }
         }

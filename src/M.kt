@@ -30,9 +30,9 @@ object M {
 fun main() {
     M.init()
     TUI.init()
-    println("■ Press the M button")
-    println("■ On FPGA, use Switch 4")
-    print("■ Initializing⬝")
+    println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ Press the M button")
+    println("${Miscellaneous.YELLOW}${Miscellaneous.BOLD}■ On FPGA, use Switch 4")
+    print("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Initializing⬝")
     Time.sleep(1000)
     print("⬝")
     Time.sleep(1000)
@@ -42,9 +42,10 @@ fun main() {
     var prev = M.enabled()
     while (true) {
         val curr = M.enabled()
-        val state = if (M.enabled()) "True" else "False"
+        val state = if (M.enabled()) "ON" else "OFF"
+        val stateColor = if (M.enabled()) Miscellaneous.GREEN else Miscellaneous.RED
         if (M.enabled() != prev) {
-            print("\r■ M State: $state")
+            print("\r$stateColor■ M State: $state")
             TUI.write("M State: $state", 0, 0, true, true)
             prev = curr
         }

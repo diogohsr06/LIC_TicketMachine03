@@ -1,3 +1,4 @@
+import TUI.write
 import isel.leic.utils.Time
 import kotlin.system.exitProcess
 
@@ -87,7 +88,12 @@ object TicketMachineApp {
                     KBD.none -> continue
                     in '0'..'9' -> {
                         val digit = key.digitToInt()
-                        if (digit < stations.size) idx = digit
+                        val nextIdx = (idx % 10) * 10 + digit
+                        if (nextIdx < stations.size) {
+                            idx = nextIdx
+                        } else if (digit < stations.size) {
+                            idx = digit
+                        }
                     }
                 }
             }
@@ -115,7 +121,12 @@ object TicketMachineApp {
                     KBD.none -> continue
                     in '0'..'9' -> {
                         val digit = key.digitToInt()
-                        if (digit < stations.size) idx = digit
+                        val nextIdx = (idx % 10) * 10 + digit
+                        if (nextIdx < stations.size) {
+                            idx = nextIdx
+                        } else if (digit < stations.size) {
+                            idx = digit
+                        }
                     }
                 }
             }
@@ -184,6 +195,7 @@ object TicketMachineApp {
             CoinDeposit.saveCoins()
             TUI.write("Shutting down...", 0, 0, true, true)
             Time.sleep(1000)
+            LCD.clear()
             exitProcess(0)
         }
         while (M.enabled()) {
@@ -266,17 +278,21 @@ object TicketMachineApp {
          * @see KBD.waitKey
          */
         fun waitForPayment(station: String, required: Int): Boolean {
+            var lastInserted = -1
             while (!M.enabled()) {
                 pollCoin()
                 val inserted = CoinDeposit.getTotal()
-                TUI.write(station, 0, 0, true, true)
-                TUI.write(
-                    "${Others.centsToEuros(inserted)}/${Others.centsToEuros(required)}${0.toChar()}",
-                    1,
-                    0,
-                    true,
-                    false
-                )
+                if (inserted != lastInserted) {
+                    TUI.write(station, 0, 0, true, true)
+                    TUI.write(
+                        "${6.toChar()}${Utils.centsToEuros(inserted)}/${Utils.centsToEuros(required)}${0.toChar()}${7.toChar()}",
+                        1,
+                        0,
+                        true,
+                        false
+                    )
+                    lastInserted = inserted
+                }
                 if (inserted >= required) return true
                 if (KBD.waitKey(200) == '#') return false
             }
@@ -284,6 +300,7 @@ object TicketMachineApp {
         }
         var idx = 0
         var roundTrip = false
+        var redraw = true
         while (!M.enabled()) {
             val st = stations[idx]
             val price = st.price * if (roundTrip) 2 else 1
@@ -297,6 +314,7 @@ object TicketMachineApp {
                     TUI.toPrint(st.station, !roundTrip)
                     if (KBD.waitKey(7000L) != '*') {
                         abortVending()
+                        redraw = true
                         continue
                     }
                     if (!waitForPayment(st.station, price)) {
@@ -329,7 +347,12 @@ object TicketMachineApp {
                 KBD.none -> continue
                 in '0'..'9' -> {
                     val digit = key.digitToInt()
-                    if (digit < stations.size) idx = digit
+                    val nextIdx = (idx % 10) * 10 + digit
+                    if (nextIdx < stations.size) {
+                        idx = nextIdx
+                    } else if (digit < stations.size) {
+                        idx = digit
+                    }
                 }
             }
         }
@@ -368,41 +391,62 @@ object TicketMachineApp {
      * @see KBD.waitKey
      */
     fun program() {
+        var scrollIdx = 0
+        var lastScrollTime = 0L
+        val scrollSpeedMs = 350L
+        val welcomeText = "${6.toChar()}Press # to Enter${7.toChar()}        ${6.toChar()}Press M key to Enter Maintenance${7.toChar()}"
+        TUI.startMenu()
+        Time.sleep(3000)
         while (true) {
-            TUI.startMenu()
-            if (M.enabled()) maintenanceMode()
-            if (KBD.waitKey(WAIT_KEY_MS) == '#') normalMode()
+            if (M.enabled()) {
+                maintenanceMode()
+                TUI.startMenu()
+                scrollIdx = 0
+                lastScrollTime = 0L
+            }
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastScrollTime >= scrollSpeedMs) {
+                Miscellaneous.writeScrollingText(welcomeText, 1, scrollIdx)
+                scrollIdx++
+                lastScrollTime = currentTime
+            }
+            val key = KBD.waitKey(20L)
+            if (key == '#') {
+                normalMode()
+                TUI.startMenu()
+                Time.sleep(3000)
+                scrollIdx = 0
+                lastScrollTime = 0L
+            }
         }
     }
 }
-
 //======================================================================================================================
 //                                                      MAIN
 //======================================================================================================================
 fun main() {
     TicketMachineApp.init()
-    print("■ Initializing⬝")
-    Time.sleep(1000)
-    print("⬝")
-    Time.sleep(1000)
-    print("⬝\n")
-    Time.sleep(1000)
-    println("=======================Navigation in Vending Mode=======================")
-    println("# -> Enter vending mode")
 
+    print("${Miscellaneous.CYAN}${Miscellaneous.BOLD}■ Initializing")
+    write("Powering", 0, 0, false, false)
+    for (i in 1..6) {
+        val blocks = "${3.toChar()}".repeat(i) + "${4.toChar()}".repeat(6 - i)
+        write(blocks, 0, 9, false, false)
+        Time.sleep(500)
+    }
+    repeat(3) { Time.sleep(600); print("⬝") }
+    println("${Miscellaneous.RESET}\n")
+
+    println("${Miscellaneous.GREEN}======================= Navigation in Vending Mode =======================${Miscellaneous.RESET}")
+    println("${Miscellaneous.YELLOW}#${Miscellaneous.RESET} -> Enter vending mode")
     println("Inside:")
-    println("C -> Select trip type")
-    println("* -> Confirm")
-    println("# -> Abort")
+    println("  ${Miscellaneous.YELLOW}C${Miscellaneous.RESET} -> Select trip type (One-way/Round-trip)")
+    println("  ${Miscellaneous.YELLOW}*${Miscellaneous.RESET} -> Confirm Selection")
+    println("  ${Miscellaneous.RED}#${Miscellaneous.RESET} -> Abort / Return Coins")
 
-    println("=======================Navigation in Maintenance Mode=======================")
-    println("# -> Simulate printing ticket")
-    println("     C -> Select trip type")
-    println("     * -> Confirm")
-    println("     # -> Abort")
-    println("A -> Stations Cnt")
-    println("B -> Coins Cnt")
-    println("C -> Reset Counters")
-    println("D -> Shutdown")
+    println("\n${Miscellaneous.GREEN}=================== Navigation in Maintenance Mode ===================${Miscellaneous.RESET}")
+    println("  ${Miscellaneous.YELLOW}A${Miscellaneous.RESET} -> Stations Cnt  |  ${Miscellaneous.YELLOW}B${Miscellaneous.RESET} -> Coins Cnt")
+    println("  ${Miscellaneous.YELLOW}C${Miscellaneous.RESET} -> Reset Cnt     |  ${Miscellaneous.RED}D${Miscellaneous.RESET} -> Shutdown")
+
     TicketMachineApp.program()
 }
