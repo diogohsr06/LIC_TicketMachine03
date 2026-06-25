@@ -196,6 +196,7 @@ object TicketMachineApp {
             TUI.write("Shutting down...", 0, 0, true, true)
             Time.sleep(1000)
             LCD.clear()
+            Time.sleep(10)
             exitProcess(0)
         }
         while (M.enabled()) {
@@ -303,7 +304,7 @@ object TicketMachineApp {
         var redraw = true
         while (!M.enabled()) {
             val st = stations[idx]
-            val price = st.price
+            val price = st.price * if (roundTrip) 2 else 1
             pollCoin()
             TUI.printTicket2(st.station, idx, roundTrip, price / 100.0)
             when (val key = KBD.waitKey(WAIT_KEY_MS)) {
@@ -414,7 +415,7 @@ object TicketMachineApp {
             if (key == '#') {
                 normalMode()
                 TUI.startMenu()
-                Time.sleep(3000)
+                Time.sleep(1000)
                 scrollIdx = 0
                 lastScrollTime = 0L
             }

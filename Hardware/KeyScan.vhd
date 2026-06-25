@@ -55,7 +55,7 @@ signal notKpress: std_logic;							--Sinal de pressao da tecla
 signal CLK_OUT: std_logic;								--Oscilador
 
 begin
-CD: CLKDIV generic map(500000) port map(			--Instanciaçao do divisor de Clk (0.01s)
+CD: CLKDIV generic map(250000) port map(			--Instanciaçao do divisor de Clk (0.01s)
 	 clk_in => Osc,
 	 clk_out => CLK_OUT);
 UCOUNTER: Counter port map (							--Instanciaçao do contador (Percorre o teclado)
